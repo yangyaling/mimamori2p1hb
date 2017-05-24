@@ -21,7 +21,7 @@ define("MYSQL_DB", "rdbeacoAd7N1JMXE");
 
 define("SERVERNAME", "tcp:mimamori.database.windows.net,1433");
 define("DATABASE", "mimamoriDB2");
-define("UID", "mimamori-user");
+define("UID", "sch001");
 define("PWD", "Passw0rd");
 
 define("HASLOGINED", "isloginuser");
