@@ -46,7 +46,7 @@ function checkScenario($conn, $scenarioId, $scenarioName, $staffId, $customerId,
         while ($row = sqlsrv_fetch_array($result)) {
             $deviceId = $row[0];
 
-            $sql = "SELECT dbo.zwcheckscenariodevice2('$scenarioId','$deviceId',$row[1],$row[2],$row[3],'$row[4]','$row[5]','$row[6]','$row[7]') checkresult";
+            $sql = "SELECT zwcheckscenariodevice2('$scenarioId','$deviceId',$row[1],$row[2],$row[3],'$row[4]','$row[5]','$row[6]','$row[7]') checkresult";
             $checkResult = sqlsrv_query($conn, $sql);
             if ($checkResult) {
                 $checkRow = sqlsrv_fetch_array($checkResult);

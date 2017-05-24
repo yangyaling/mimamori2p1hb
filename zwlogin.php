@@ -15,11 +15,16 @@ $arrReturn = array();
 $arrReturn['code'] = '200';
 $arrReturn['staffname'] = '';
 $arrReturn['email'] = '';
+
 $hostCd = $_POST['hostcd'];
 $staffId = $_POST['staffid'];
 $password = $_POST['password'];
 
 if ($conn) {
+//    $hostCd = 'host01';
+//    $staffId = 'sw00001';
+//    $password = 'P@ssw0rd';
+
     $sql = "SELECT TOP 1 sm.[staffid],f.[hostcd],sm.[staffname],sm.[groupid],sm.[nickname],sm.[zworksemail],sm.[password],sm.[usertype]
             FROM [AZW004_staffmst] sm INNER JOIN [AZW007_staffrelation] sr ON sm.staffid = sr.staffid
             INNER JOIN [AZW003_facilitymst] f ON sr.facilitycd = f.facilitycd INNER JOIN [AZW002_hostmst] hm ON hm.hostcd = f.hostcd
