@@ -46,7 +46,7 @@ if ($conn && !is_empty($facilityInfo)) {
             $errors = sqlsrv_errors();
         }
     } else {
-        $sql = "INSERT INTO dbo.AZW003_facilitymst(facilitycd,hostcd,facilityname1,facilityname1kana,facilityname2,
+        $sql = "INSERT INTO AZW003_facilitymst(facilitycd,hostcd,facilityname1,facilityname1kana,facilityname2,
                 facilityname2kana,floorcount,roomcount,memo,updateuser,updatedate)
                 VALUES('$facilityCd','$hostCd','$facilityName1','$facilityName1Kana','$facilityName2',
                 '$facilityName2Kana','$floorCount','$roomCount','$memo','admin',GETDATE())";

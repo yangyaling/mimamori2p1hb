@@ -34,8 +34,8 @@ if ($conn) {
 
     if ($code == '200') {
         $sql = "SELECT ISNULL(l.nodetype,m.nc) nodetype,m.nv,ISNULL(l.devicetype,m.dc) devicetype,m.dv,l.pattern,l.time,l.value,l.rpoint,ISNULL(l.scopecd,'-') scopecd,CONVERT(VARCHAR(5),l.starttime,108) starttime,CONVERT(VARCHAR(5),l.endtime,108) endtime
-                FROM (SELECT n.[code] nc,n.[value] nv,d.[code] dc,d.[value] dv FROM [mimamoriDB2Test].[dbo].[AZW110_classmst] d
-                LEFT OUTER JOIN [mimamoriDB2Test].[dbo].[AZW110_classmst] n ON n.classcd='" . CLASS_NODE_TYPE . "'
+                FROM (SELECT n.[code] nc,n.[value] nv,d.[code] dc,d.[value] dv FROM [AZW110_classmst] d
+                LEFT OUTER JOIN [AZW110_classmst] n ON n.classcd='" . CLASS_NODE_TYPE . "'
                 AND n.[code]='" . (($nodeType == '2') ? '2' : '1') . "' WHERE d.classcd='" . CLASS_DEVICE_TYPE . "'
                 AND d.code IN ('1','2','3','" . (($nodeType == '2') ? '5' : '4') . "')) m
                 LEFT OUTER JOIN (SELECT spm.protoid,spm.protoname,spm.nodetype,spm.devicetype,spm.pattern,spm.time,spm.value,
