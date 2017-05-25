@@ -30,7 +30,7 @@ if ($conn) {
     $sql = "SELECT REPLACE(CONVERT(VARCHAR(10),nt.registdate,120),'-0','-'),nt.noticetype
             FROM AZW121_noticetbl nt,AZW004_staffmst um,(SELECT DISTINCT sr.staffid,fv.roomcd,fv.custid,fv.custname
             FROM AZW001_frscview fv INNER JOIN AZW007_staffrelation sr ON sr.facilitycd=fv.facilitycd
-            WHERE fv.staffid='$staffId') fs WHERE nt.noticetype='1' AND nt.receiveuser='$staffId'
+            WHERE fv.facilitycd='$facilityCd') fs WHERE nt.noticetype='1' AND nt.receiveuser='$staffId'
             AND um.staffid=nt.receiveuser AND fs.staffid=nt.receiveuser AND fs.custid=nt.senduser
             GROUP BY CONVERT(VARCHAR(10),nt.registdate,120),nt.noticetype";
 
