@@ -37,7 +37,8 @@ if ($conn) {
         $sql = "SELECT ui.custid,ui.custname user0name,ut.mainnodename dispname,ut.roomcd,ut.picpath,ut.picupdatedate,sc.nodecnt,ut.floorno
                 FROM AZW001_frscview ut LEFT OUTER JOIN AZW005_custmst ui ON ut.custid=ui.custid
                 LEFT OUTER JOIN (SELECT roomcd,floorno,COUNT(DISTINCT nodeid) nodecnt FROM AZW230_sensormstview
-                WHERE enddate IS NULL AND nodetype IS NOT NULL GROUP BY roomcd,floorno) sc ON sc.roomcd=ut.roomcd AND sc.floorno=ut.floorno
+                WHERE enddate IS NULL AND startdate <= CONVERT(VARCHAR(10),GETDATE(),120) AND nodetype IS NOT NULL
+                GROUP BY roomcd,floorno) sc ON sc.roomcd=ut.roomcd AND sc.floorno=ut.floorno
                 WHERE ut.staffid='$staffId' AND facilitycd='$facilityCd' ORDER BY ut.custid";
     }
 
