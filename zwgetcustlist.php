@@ -32,7 +32,8 @@ if ($conn) {
         $sql = "SELECT DISTINCT clv.custid,clv.custname,clv.dispname,clv.resultname,clv.roomcd,clv.tvalue,clv.tunit,clv.bvalue,
                 clv.bunit,clv.bd,clv.picpath,clv.picupdatedate,clv.hvalue,clv.hunit FROM AZW200_custstatuslistview clv
                 INNER JOIN AZW230_sensormstview sv ON sv.custid=clv.custid AND sv.initflag=1 AND sv.startdate <= CONVERT(VARCHAR(10),GETDATE(),120)
-                AND sv.enddate IS NULL WHERE clv.staffid='$staffId' AND clv.facilitycd='$facilityCd' ORDER BY clv.custid";
+                AND (sv.enddate IS NULL OR sv.enddate >= CONVERT(VARCHAR(10),GETDATE(),120))
+                WHERE clv.staffid='$staffId' AND clv.facilitycd='$facilityCd' ORDER BY clv.custid";
     } else {
         $sql = "SELECT ui.custid,ui.custname user0name,ut.mainnodename dispname,ut.roomcd,ut.picpath,ut.picupdatedate,sc.nodecnt,ut.floorno
                 FROM AZW001_frscview ut LEFT OUTER JOIN AZW005_custmst ui ON ut.custid=ui.custid
