@@ -25,7 +25,7 @@ $selectDate = $_POST['selectdate'];//履歴(カレンダー)
 $historyFlg = $_POST['historyflg'];//0:当日；1:履歴；
 $noticeType = $_POST['noticetype'];//0:全部；1:アラート；2:支援要請；
 
-function getNoticeInfo($conn, $startDate, $selectDate, $sendUser, $historyFlg, $noticeType, &$code, &$errors)
+function getNoticeInfo($conn, $startDate, $selectDate, $facilityCd, $sendUser, $historyFlg, $noticeType, &$code, &$errors)
 {
     //履歴　直近1ヶ月
     if (is_empty($selectDate)) {
@@ -61,7 +61,7 @@ function getNoticeInfo($conn, $startDate, $selectDate, $sendUser, $historyFlg, $
                 nt.status,nt.confirmuser,nt.content,CONVERT(CHAR(19),nt.registdate,120) registdate
                 FROM AZW121_noticetbl nt INNER JOIN (SELECT DISTINCT sr.staffid,fv.roomcd,fv.custid,fv.custname
                 FROM AZW001_frscview fv INNER JOIN AZW007_staffrelation sr ON sr.facilitycd=fv.facilitycd
-                WHERE fv.staffid='$sendUser') fs ON fs.staffid=nt.receiveuser AND fs.custid=nt.senduser
+                WHERE fv.facilitycd='$facilityCd') fs ON fs.staffid=nt.receiveuser AND fs.custid=nt.senduser
                 LEFT OUTER JOIN AZW004_staffmst sm ON sm.staffid=nt.receiveuser
                 LEFT OUTER JOIN AZW005_custmst cm ON cm.custid=nt.senduser
                 WHERE  nt.noticetype='1' AND nt.receiveuser='$sendUser' $conditionSql
@@ -187,7 +187,7 @@ if ($conn) {
         $facilityCd = getCurFacilityCd($conn, $customerId, $code, $errors);
     } else if (!is_empty($staffId)) {
 //        $notices = getNoticeInfo($conn, $startDate, $selectDate, $staffId, $historyFlg, $noticeType, $code, $errors);
-        $notices = getNoticeInfo($conn, $startDate, $selectDate, $staffId, $historyFlg, '1', $code, $errors);
+        $notices = getNoticeInfo($conn, $startDate, $selectDate, $facilityCd, $staffId, $historyFlg, '1', $code, $errors);
     }
 //    else if ($noticeType == '0' || $noticeType == '1' || $noticeType == '2') {
 //        //当日は全部
