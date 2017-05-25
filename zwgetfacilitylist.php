@@ -20,12 +20,8 @@ $hostCd = $_POST['hostcd'];
 
 if ($conn) {
 
-    $sql = "SELECT sr.[facilitycd]
-	  ,fm.[hostcd]
-	  ,fm.[facilityname2]
-  FROM  [AZW007_staffrelation] sr
-  INNER JOIN [AZW003_facilitymst] fm ON sr.facilitycd = fm.facilitycd
-  WHERE sr.staffid = '$staffId'AND fm.hostcd = '$hostCd'";
+    $sql = "SELECT fv.facilitycd,fv.facilityname2 FROM AZW001_frscview fv WHERE staffid = '$staffId' AND fv.hostcd = '$hostCd'
+            GROUP BY fv.facilitycd,fv.facilityname2 ORDER BY fv.facilitycd";
 
     $result = sqlsrv_query($conn, $sql);
     $facilityList = array();
@@ -35,7 +31,7 @@ if ($conn) {
         while ($row = sqlsrv_fetch_array($result)) {
             $facilityList[$index] = array(
                 'facilitycd' => $row[0],
-                'hostcd' => $row[1],
+                'hostcd' => $hostCd,
                 'facilityname2' => $row[2]
             );
             $index = $index + 1;
