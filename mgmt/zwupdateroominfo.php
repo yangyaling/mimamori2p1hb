@@ -25,25 +25,28 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
             $oldRoomCd = $data['oldroomcd'];
             $oldFloorNo = $data['oldfloorno'];
 
-            $sql = "SELECT 1 FROM AZW134_roommst WHERE roomcd='$oldRoomCd' AND facilitycd='$facilityCd' AND floorno='$oldFloorNo'";
-            if (sqlsrv_has_rows(sqlsrv_query($conn, $sql))) {
-                $sql = "SELECT TOP 1 rm.roomcd,rm.floorno,cr.roomcd FROM AZW134_roommst rm
+            if (!is_empty($roomCd) && !is_empty($floorNo)) {
+                $sql = "SELECT 1 FROM AZW134_roommst WHERE roomcd='$oldRoomCd' AND facilitycd='$facilityCd' AND floorno='$oldFloorNo'";
+                if (sqlsrv_has_rows(sqlsrv_query($conn, $sql))) {
+                    if ($roomCd != $oldRoomCd || $floorNo != $oldFloorNo) {
+                        $sql = "SELECT TOP 1 rm.roomcd,rm.floorno,cr.roomcd FROM AZW134_roommst rm
                         LEFT OUTER JOIN AZW008_custrelation cr ON rm.roomcd=cr.roomcd AND rm.floorno=cr.floorno
                         WHERE rm.roomcd='$oldRoomCd' AND rm.facilitycd='$facilityCd' AND rm.floorno='$oldFloorNo' AND cr.roomcd IS NOT NULL";
 
-                if (!sqlsrv_has_rows(sqlsrv_query($conn, $sql))) {
-                    $sql = "UPDATE AZW134_roommst SET roomcd='$roomCd',floorno='$floorNo' WHERE roomcd='$oldRoomCd' AND facilitycd='$facilityCd' AND floorno='$oldFloorNo'";
-                    if (!$result = sqlsrv_query($conn, $sql)) {
-                        $code = '501';
-                        $errors = sqlsrv_errors();
-                        break;
+                        if (!sqlsrv_has_rows(sqlsrv_query($conn, $sql))) {
+                            $sql = "UPDATE AZW134_roommst SET roomcd='$roomCd',floorno='$floorNo' WHERE roomcd='$oldRoomCd' AND facilitycd='$facilityCd' AND floorno='$oldFloorNo'";
+                            if (!$result = sqlsrv_query($conn, $sql)) {
+                                $code = '501';
+                                $errors = sqlsrv_errors();
+                                break;
+                            }
+                        } else {
+                            $code = '502';
+                            $errors = array('居室情報（他機能）にて使用されている場合、変更は不可');
+                            break;
+                        }
                     }
                 } else {
-                    $code = '502';
-                    $errors = array('居室情報（他機能）にて使用されている場合、変更は不可');
-                }
-            } else {
-                if (!is_empty($roomCd) && !is_empty($facilityCd) && !is_empty($floorNo)) {
                     $sql = "INSERT INTO AZW134_roommst(roomcd,floorno,facilitycd,updateuser,updatedate)
                             VALUES('$roomCd','$floorNo','$facilityCd','admin',GETDATE())";
                     if (!$result = sqlsrv_query($conn, $sql)) {
@@ -51,10 +54,11 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
                         $errors = sqlsrv_errors();
                         break;
                     }
-                } else {
-                    $code = '502';
-                    break;
                 }
+            } else {
+                $code = '502';
+                $errors = array('paraments error.');
+                break;
             }
         }
     } else {
