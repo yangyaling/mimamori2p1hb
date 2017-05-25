@@ -46,7 +46,7 @@ function getMainValues($conn, $arrCnt, $conDate, $deviceId)
     $sql = "SELECT COUNT(zd.value) value FROM (SELECT CAST(DATEDIFF(ss,'1970-01-01 00:00:00',
             DATEADD(hh,s.number*1,'$conDate 00:00:00')) - 32400 AS BIGINT) * 1000 st,
             CAST(DATEDIFF(ss,'1970-01-01 00:00:00',DATEADD(hh,s.number*1+1,'$conDate 00:00:00')) - 32400
-            AS BIGINT) * 1000 et FROM master..spt_values s WHERE s.type = 'P' AND s.number <= 23) zdt
+            AS BIGINT) * 1000 et FROM AZW111_values s WHERE s.type = 'P' AND s.number <= 23) zdt
             LEFT OUTER JOIN AZW133_zworksdata zd ON zd.deviceid = '$deviceId' AND zd.value = '255'
             AND zd.timestmp >= zdt.st AND zd.timestmp < zdt.et GROUP BY zdt.st ORDER BY zdt.st";
 
@@ -107,7 +107,7 @@ function getSubValues($conn, $arrCnt, $conDate, $deviceId)
     $sql = "SELECT MAX(zd.value) value FROM (SELECT CAST(DATEDIFF(ss,'1970-01-01 00:00:00',
             DATEADD(mi,s.number*30,'$conDate 00:00:00')) - 32400 AS BIGINT) * 1000 st,
             CAST(DATEDIFF(ss,'1970-01-01 00:00:00',DATEADD(mi,s.number*30+30,'$conDate 00:00:00')) - 32400 AS BIGINT) * 1000 et
-            FROM master..spt_values s WHERE s.type = 'P' AND s.number <= 47) zdt LEFT OUTER JOIN AZW133_zworksdata zd
+            FROM AZW111_values s WHERE s.type = 'P' AND s.number <= 47) zdt LEFT OUTER JOIN AZW133_zworksdata zd
             ON zd.deviceid = '$deviceId' AND zd.timestmp >= zdt.st AND zd.timestmp < zdt.et
             GROUP BY zdt.st,zdt.et,zd.deviceid ORDER BY zdt.st,zdt.et,zd.deviceid";
 
@@ -161,7 +161,7 @@ function getPreValue($conn, $baseDate, $deviceId, $deepIndex)
     $sql = "SELECT TOP 1 pre.value FROM (SELECT zdt.st,zdt.et,MAX(zd.value) value FROM (SELECT CAST(DATEDIFF(ss,
             '1970-01-01 00:00:00',DATEADD(mi,s.number*30,'$conDate 00:00:00')) - 32400 AS BIGINT) * 1000 st,
             CAST(DATEDIFF(ss,'1970-01-01 00:00:00',DATEADD(mi,s.number*30+30,'$conDate 00:00:00')) - 32400 AS BIGINT) * 1000 et
-            FROM master..spt_values s WHERE s.type = 'P' AND s.number <= 47) zdt LEFT OUTER JOIN AZW133_zworksdata zd
+            FROM AZW111_values s WHERE s.type = 'P' AND s.number <= 47) zdt LEFT OUTER JOIN AZW133_zworksdata zd
             ON zd.deviceid = '$deviceId' AND zd.timestmp >= zdt.st AND zd.timestmp < zdt.et GROUP BY zdt.st,zdt.et,zd.deviceid) pre
             WHERE pre.value IS NOT NULL ORDER BY st DESC";
 

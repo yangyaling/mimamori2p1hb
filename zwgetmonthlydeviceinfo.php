@@ -79,7 +79,7 @@ function getDays($conn, $baseDate)
 //    $monthValues = array();
 //
 //    $sql = "SELECT COUNT(zd.value) value FROM (SELECT CONVERT(VARCHAR(10),DATEADD(dd,number,'$conDate'),120) AS dt
-//            FROM master..spt_values WHERE type='P' AND DATEADD(dd,number,'$conDate')<=DATEADD(dd,-1,CONVERT(VARCHAR(8),
+//            FROM AZW111_values WHERE type='P' AND DATEADD(dd,number,'$conDate')<=DATEADD(dd,-1,CONVERT(VARCHAR(8),
 //            DATEADD(mm,1,'$conDate'),120)+'01')) zdt LEFT OUTER JOIN AZW133_zworksdata zd ON zd.deviceid = '$deviceId'
 //            AND zd.value = '255' AND zd.date = zdt.dt GROUP BY zdt.dt ORDER BY zdt.dt";
 //
