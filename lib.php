@@ -23,6 +23,7 @@ define("SERVERNAME", "tcp:mimamori.database.windows.net,1433");
 define("DATABASE", "mimamoriDB2");
 define("UID", "sch001");
 define("PWD", "Passw0rd");
+define("SCH", "sch001");
 
 define("HASLOGINED", "isloginuser");
 define("LOGINUSER", "loginuser");
