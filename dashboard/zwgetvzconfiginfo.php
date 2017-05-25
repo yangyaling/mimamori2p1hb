@@ -24,8 +24,8 @@ $vzConfigInfo = array();
 $displayList = array();
 $deviceTypeList = array();
 
-//$floorNo = 'B棟1';
-//$facilityCd = '0001';
+//$floorNo = 'A棟1';
+//$facilityCd = 'xxxx';
 //$hostCd = 'host01';
 //$staffId = 'sw00001';
 
@@ -38,7 +38,7 @@ if ($conn) {
                 vz.deviceid1,vz.devicetype1,vz.dataexplain1,vz.displaycd2,vz.deviceid2,vz.devicetype2,vz.dataexplain2,cmd1.value displayname1,
                 cmd2.value displayname2,cmt1.value devicetypename1,cmt2.value devicetypename2,vz.vzstartdt,vz.vzenddt FROM AZW001_frscview fv
                 INNER JOIN AZW134_roommst zwm ON zwm.roomcd=fv.roomcd AND zwm.facilitycd=fv.facilitycd AND zwm.floorno=fv.floorno
-                LEFT OUTER JOIN AZW150_vzconfig vz ON vz.userid=fv.custid AND (vz.vzenddt IS NULL OR vz.vzenddt >= '$today')
+                LEFT OUTER JOIN AZW150_vzconfig vz ON vz.userid=fv.custid AND vz.vzenddt IS NULL
                 LEFT OUTER JOIN AZW110_classmst AS cmd1 ON cmd1.classcd='" . CLASS_NODE_LOCATION . "' AND cmd1.code=vz.displaycd1
                 LEFT OUTER JOIN AZW110_classmst AS cmd2 ON cmd2.classcd='" . CLASS_NODE_LOCATION . "' AND cmd2.code=vz.displaycd2
                 LEFT OUTER JOIN AZW110_classmst AS cmt1 ON cmt1.classcd='" . CLASS_DEVICE_TYPE . "' AND cmt1.code=vz.devicetype1
@@ -54,7 +54,7 @@ if ($conn) {
             cmd1.value displayname1,cmd2.value displayname2,cmt1.value devicetypename1,cmt2.value devicetypename2,vz.vzstartdt,vz.vzenddt
             FROM AZW001_frscview fv INNER JOIN (SELECT DISTINCT roomcd,floorno,facilitycd FROM AZW134_roommst WHERE floorno='$floorNo'
             AND facilitycd='$facilityCd') zwm ON zwm.roomcd=fv.roomcd AND zwm.facilitycd=fv.facilitycd AND zwm.floorno=fv.floorno
-            LEFT OUTER JOIN AZW150_vzconfig vz ON vz.userid=fv.custid AND (vz.vzenddt IS NULL OR vz.vzenddt >= '$today')
+            LEFT OUTER JOIN AZW150_vzconfig vz ON vz.userid=fv.custid AND vz.vzenddt IS NULL
             LEFT OUTER JOIN AZW110_classmst AS cmd1 ON cmd1.classcd='" . CLASS_NODE_LOCATION . "' AND cmd1.code=vz.displaycd1
             LEFT OUTER JOIN AZW110_classmst AS cmd2 ON cmd2.classcd='" . CLASS_NODE_LOCATION . "' AND cmd2.code=vz.displaycd2
             LEFT OUTER JOIN AZW110_classmst AS cmt1 ON cmt1.classcd='" . CLASS_DEVICE_TYPE . "' AND cmt1.code=vz.devicetype1
