@@ -56,7 +56,7 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
                 }
 
                 if ($hasMsg) {
-                    $updateItemMsg .= "更新前\n" . $sensorId . " " . $oldDisplayName . " " . $oldPlaceName . "」\n\n更新後\n" .
+                    $updateItemMsg .= "更新前\n" . $sensorId . " " . $oldDisplayName . " " . $oldPlaceName . "\n\n更新後\n" .
                         $sensorId . " " . $displayName . " " . $placeName . "\n";
 
                     $sql = "SELECT 1 FROM AZW009_serialrelation WHERE serial='$serial' AND custid='$customerId'
