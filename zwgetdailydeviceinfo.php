@@ -129,6 +129,11 @@ function getDeviceInfo2($conn, &$code, $arrCnt, $baseDate, $staffId, $customerId
 //                'deviceunit' => $value['deviceunit'],
 //                'latestvalue' => $value['latestvalue'],
 //                'devicevalues' => getSubDateArray($conn, $arrCnt, $conDate, $value['deviceid'])
+                    if ($dateYMD == $row[10]) {
+                        $deviceValues = getSubValues($conn, $arrCnt, $row[10], $row[2]);
+                    } else {
+                        $deviceValues = getSubValues($conn, '', $row[10], $row[2]);
+                    }
                     $deviceInfo[$index] = array(array(
 //                        'roomid' => $row[0],
 //                        'nodeid' => $row[1],
@@ -140,7 +145,7 @@ function getDeviceInfo2($conn, &$code, $arrCnt, $baseDate, $staffId, $customerId
 //                        'latestdate' => $row[7],
 //                        'nodename' => $row[8],
 //                        'displayname' => $row[9],
-                        'devicevalues' => getSubValues($conn, $arrCnt, $row[10], $row[2])
+                        'devicevalues' => $deviceValues
                     ));
                 } else {
                     if ($dateYMD == $row[10]) {
@@ -187,15 +192,15 @@ function getDeviceInfo2($conn, &$code, $arrCnt, $baseDate, $staffId, $customerId
 
 if ($conn) {
 ////基準日時
-//    $baseDate = '2017-05-11 14:25:55';
+//    $baseDate = '2017-05-26 14:25:55';
 ////ユーザID１
 //    $staffId = 'sw00001';
 ////ユーザID０
-//    $customerId = '00004';
+//    $customerId = '00002';
 ////デバイスクラス：[1:メインデバイス　2:サブデバイス]
-//    $deviceClass = '1';
+//    $deviceClass = '2';
 ////ノードID
-//    $nodeId = '1077';
+//    $nodeId = '13564';
     $y = substr($baseDate, 0, 4);
     $m = substr($baseDate, 5, 2);
     $d = substr($baseDate, 8, 2);
