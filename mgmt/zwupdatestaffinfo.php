@@ -46,7 +46,7 @@ if ($conn && sqlsrv_begin_transaction($conn) && !is_empty($staffList)) {
 
         if (sqlsrv_has_rows(sqlsrv_query($conn, $sql))) {
             if ($userType != $oldUserType || $nickname != $oldNickname) {
-                $sql = "UPDATE AZW004_staffmst SET nickname='$nickname',usertype='$userType',updatedate=GETDATE() WHERE staffid='$staffId'";
+                $sql = "UPDATE AZW004_staffmst SET staffname='$nickname',usertype='$userType',updatedate=GETDATE() WHERE staffid='$staffId'";
 
                 $result = sqlsrv_query($conn, $sql);
                 if (!$result) {
