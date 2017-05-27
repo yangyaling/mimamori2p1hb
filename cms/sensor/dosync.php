@@ -148,11 +148,13 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
         $_SESSION[SENSORINFO] = $sensorInfo;
     }
 
-    //元のデータをクリアする
-    cleanNITSensorInfo($conn, $code, $errors);
+    if ($sensorInfo) {
+        //元のデータをクリアする
+        cleanNITSensorInfo($conn, $code, $errors);
 
-    //同期化処理を行う
-    syncNITSensorInfo($conn, $sensorInfo, 'aimi.f507@gmail.com', $code, $errors);
+        //同期化処理を行う
+        syncNITSensorInfo($conn, $sensorInfo, 'aimi.f507@gmail.com', $code, $errors);
+    }
 } else {
     $code = '500';
 }
