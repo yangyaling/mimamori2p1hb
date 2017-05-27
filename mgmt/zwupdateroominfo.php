@@ -48,7 +48,7 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
                     }
                 } else {
                     $sql = "INSERT INTO AZW134_roommst(roomcd,floorno,facilitycd,updateuser,updatedate)
-                            VALUES('$roomCd','$floorNo','$facilityCd','admin',GETDATE())";
+                            VALUES('$roomCd','$floorNo','$facilityCd','admin'," . SCH . ".GETJPDATE())";
                     if (!$result = sqlsrv_query($conn, $sql)) {
                         $code = '503';
                         $errors = sqlsrv_errors();

@@ -19,8 +19,10 @@ $customerId = $_POST['custid'];
 $roomCd = $_POST['roomcd'];
 $floorNo = $_POST['floorno'];
 
-//$customerId = '00006';
-//$roomCd = '303号室';
+//$staffId = 'sw00001';
+//$customerId = '00017';
+//$roomCd = '201号室';
+//$floorNo = 'B棟2';
 
 if ($conn && sqlsrv_begin_transaction($conn)) {
     $customerName = '';

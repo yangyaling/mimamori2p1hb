@@ -50,7 +50,7 @@ function getNowWeekNum($conn)
     $weekNum = date('Y') . '-' . intval(date('W'));
 
     $sql = "SET DATEFIRST 1;";
-    $sql .= "SELECT CONVERT(CHAR(4),GETDATE(),120)+'-'+RIGHT('0'+CAST(DATEPART(WEEK, GETDATE()) AS VARCHAR(2)),2) dt";
+    $sql .= "SELECT CONVERT(CHAR(4)," . SCH . ".GETJPDATE(),120)+'-'+RIGHT('0'+CAST(DATEPART(WEEK, " . SCH . ".GETJPDATE()) AS VARCHAR(2)),2) dt";
     if ($result = sqlsrv_query($conn, $sql)) {
         if ($row = sqlsrv_fetch_array($result)) {
             $weekNum = $row[0];
@@ -310,7 +310,7 @@ function getDailyLrSumList($conn, $userId0, $sd, $ed, $dates)
     $lrSumList = array();
 
     $sql = "SELECT vz1.actionid + '|' + vz1.actionclass + '|' + vz1.vzstartdt actionid,vz1.actionsummary,d.sdate,d.cnt,d.vavg,d.vmax,d.vmin,vz1.color1,vz1.actionexplain,vz1.actionname
-            FROM AZW150_vzconfig vz1,zwgetdailyactionsummary('$userId0','$sd','$ed') d
+            FROM AZW150_vzconfig vz1," . SCH . ".zwgetdailyactionsummary('$userId0','$sd','$ed') d
             WHERE vz1.userid = '$userId0' AND vz1.actionid = d.actionid AND vz1.actionclass = d.actionclass AND vz1.vzstartdt = d.vzstartdt
             ORDER BY vz1.actionclass,vz1.actionorder,vz1.actionid,d.sdate";
 
@@ -403,7 +403,7 @@ function getWeeklyLrSumList($conn, $userId0, $dates, $sd, $ed)
 
     $sql = "SET DATEFIRST 1;";
 //    $sql .= "SELECT vz1.actionid,vz1.actionsummary,d.sdate,d.cnt,d.vavg,d.vmax,d.vmin,vz1.color1,vz1.actionexplain,vz1.actionname
-//            FROM AZW150_vzconfig vz1,zwgetweeklyactionsummary('$userId0','$sd 00:00:00','$ed 00:00:00') d
+//            FROM AZW150_vzconfig vz1," . SCH . ".zwgetweeklyactionsummary('$userId0','$sd 00:00:00','$ed 00:00:00') d
 //            WHERE vz1.userid = '$userId0' AND vz1.actionid = d.actionid
 //            ORDER BY vz1.actionclass,vz1.actionorder,vz1.actionid,d.sdate";
 //    $sql = "SELECT vz1.actionid,vz1.actionsummary,d.dt,d.cnt,d.vavg,d.vmax,d.vmin,vz1.color1,vz1.actionexplain,vz1.actionname
@@ -503,7 +503,7 @@ function getMonthlyLrSumList($conn, $userId0, $dates, $sd, $ed)
 //    $ed = end($dates);
 
 //    $sql = "SELECT vz1.actionid,vz1.actionsummary,d.sdate,d.cnt,d.vavg,d.vmax,d.vmin,vz1.color1,vz1.actionexplain,vz1.actionname
-//            FROM AZW150_vzconfig vz1,zwgetmonthlyactionsummary('$userId0','$sd 00:00:00','$ed 00:00:00') d
+//            FROM AZW150_vzconfig vz1," . SCH . ".zwgetmonthlyactionsummary('$userId0','$sd 00:00:00','$ed 00:00:00') d
 //            WHERE vz1.userid = '$userId0' AND vz1.actionid = d.actionid
 //            ORDER BY vz1.actionclass,vz1.actionorder,vz1.actionid,d.sdate";
 
@@ -604,7 +604,7 @@ function getYearlyLrSumList($conn, $userId0, $dates, $sd, $ed)
 //    $ed = end($dates);
 
 //    $sql = "SELECT vz1.actionid,vz1.actionsummary,d.sdate,d.cnt,d.vavg,d.vmax,d.vmin,vz1.color1,vz1.actionexplain,vz1.actionname
-//            FROM AZW150_vzconfig vz1,zwgetyearlyactionsummary('$userId0','$sd 00:00:00','$ed 00:00:00') d
+//            FROM AZW150_vzconfig vz1," . SCH . ".zwgetyearlyactionsummary('$userId0','$sd 00:00:00','$ed 00:00:00') d
 //            WHERE vz1.userid = '$userId0' AND vz1.actionid = d.actionid
 //            ORDER BY vz1.actionclass,vz1.actionorder,vz1.actionid,d.sdate";
 

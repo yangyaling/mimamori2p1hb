@@ -46,7 +46,7 @@ if ($conn && sqlsrv_begin_transaction($conn) && !is_empty($staffList)) {
 
         if (sqlsrv_has_rows(sqlsrv_query($conn, $sql))) {
             if ($userType != $oldUserType || $nickname != $oldNickname) {
-                $sql = "UPDATE AZW004_staffmst SET staffname='$nickname',usertype='$userType',updatedate=GETDATE() WHERE staffid='$staffId'";
+                $sql = "UPDATE AZW004_staffmst SET staffname='$nickname',usertype='$userType',updatedate=" . SCH . ".GETJPDATE() WHERE staffid='$staffId'";
 
                 $result = sqlsrv_query($conn, $sql);
                 if (!$result) {
@@ -58,7 +58,7 @@ if ($conn && sqlsrv_begin_transaction($conn) && !is_empty($staffList)) {
         } else if (!is_empty($staffId)) {
             $sql = "INSERT INTO AZW004_staffmst
                     (staffid,staffname,usertype,groupid,nickname,email,password,zworksemail,zworkspassword,updatedate)
-                    VALUES('$staffId','$nickname','$userType','1','$nickname',null,'P@ssw0rd','aimi.f507@gmail.com','a620507',GETDATE())";
+                    VALUES('$staffId','$nickname','$userType','1','$nickname',null,'P@ssw0rd','aimi.f507@gmail.com','a620507'," . SCH . ".GETJPDATE())";
 
             $result = sqlsrv_query($conn, $sql);
             if (!$result) {

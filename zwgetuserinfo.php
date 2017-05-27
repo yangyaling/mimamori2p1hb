@@ -18,7 +18,8 @@ $arrReturn['userinfo'] = '';
 $staffId = $_POST['staffid'];
 
 if ($conn) {
-//    $staffId='0001';
+//    $staffId='sw0001';
+
     $sql = "SELECT staffid,groupid,staffname,nickname,email,updatedate FROM AZW004_staffmst WHERE staffid='$staffId'";
 
     $result = sqlsrv_query($conn, $sql);

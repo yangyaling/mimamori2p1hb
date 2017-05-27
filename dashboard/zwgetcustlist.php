@@ -28,19 +28,19 @@ if ($conn) {
 //    $staffId = 'sw00001';
 
     if ($facilityCd == DEFAULT_FACILITY_CD) {
-        $sql = "SELECT fv.roomcd,fv.custid,fv.custname,cv.picpath,DATEDIFF(DAY,CAST(cv.birthday AS DATE),GETDATE()) / 365 old,
-                cv.sex,cv.tvalue,cv.tunit,cv.bd FROM AZW001_frscview fv INNER JOIN AZW134_roommst zwm
+        $sql = "SELECT fv.roomcd,fv.custid,fv.custname,cv.picpath,DATEDIFF(DAY,CAST(cv.birthday AS DATE)," . SCH . ".GETJPDATE()) / 365 old,
+                cv.sex,cv.tvalue,cv.tunit,cv.bd,fv.facilityname2,fv.floorno FROM AZW001_frscview fv INNER JOIN AZW134_roommst zwm
                 ON zwm.roomcd=fv.roomcd AND zwm.facilitycd=fv.facilitycd AND zwm.floorno=fv.floorno
                 LEFT OUTER JOIN AZW200_custstatuslistview cv ON fv.custid=cv.custid AND fv.staffid=cv.staffid
-                WHERE fv.hostcd='$hostCd' GROUP BY fv.facilitycd,fv.floorno,fv.roomcd,fv.custid,fv.custname,cv.picpath,
+                WHERE fv.hostcd='$hostCd' GROUP BY fv.facilitycd,fv.facilityname2,fv.floorno,fv.roomcd,fv.custid,fv.custname,cv.picpath,
                 cv.birthday,cv.sex,cv.tvalue,cv.tunit,cv.bd ORDER BY fv.facilitycd,fv.floorno,fv.roomcd";
     } else {
         $sql = "SELECT fv.roomcd,fv.custid,fv.custname,cv.picpath,
-            DATEDIFF(DAY,CAST(cv.birthday AS DATE),GETDATE()) / 365 old,cv.sex,cv.tvalue,cv.tunit,cv.bd
+            DATEDIFF(DAY,CAST(cv.birthday AS DATE)," . SCH . ".GETJPDATE()) / 365 old,cv.sex,cv.tvalue,cv.tunit,cv.bd,fv.facilityname2,fv.floorno
             FROM AZW001_frscview fv INNER JOIN (SELECT DISTINCT roomcd,floorno,facilitycd FROM AZW134_roommst
             WHERE floorno='$floorNo' AND facilitycd='$facilityCd') zwm ON zwm.roomcd=fv.roomcd AND zwm.facilitycd=fv.facilitycd AND zwm.floorno=fv.floorno
             LEFT OUTER JOIN AZW200_custstatuslistview cv ON fv.custid=cv.custid AND fv.staffid=cv.staffid
-            WHERE fv.facilitycd='$facilityCd' AND fv.staffid='$staffId' GROUP BY fv.roomcd,fv.custid,fv.custname,
+            WHERE fv.facilitycd='$facilityCd' AND fv.staffid='$staffId' GROUP BY fv.roomcd,fv.facilityname2,fv.floorno,fv.custid,fv.custname,
             cv.picpath,cv.birthday,cv.sex,cv.tvalue,cv.tunit,cv.bd ORDER BY fv.roomcd";
     }
 
@@ -56,7 +56,9 @@ if ($conn) {
                 'usersex' => $row[5],
                 'tvalue' => $row[6],
                 'tunit' => $row[7],
-                'bd' => $row[8]
+                'bd' => $row[8],
+                'facilityname2' => $row[9],
+                'floorno' => $row[10]
             );
             $index++;
         }

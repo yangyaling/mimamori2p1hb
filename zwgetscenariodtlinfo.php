@@ -33,7 +33,7 @@ function getScenarioDtlInfo($conn, $roomCd, $customerId, $scenarioId)
             CASE WHEN deviceclass = 1 AND devicetype = 4 THEN 1 WHEN deviceclass = 1 AND devicetype = 5 THEN 2 ELSE 3 END pattern,
             unit,ROW_NUMBER() OVER(PARTITION BY nodeid ORDER BY deviceclass,devicetype) zi,norder nodeorder FROM AZW230_sensormstview
             WHERE roomcd='$roomCd' AND custid='$customerId' AND deviceclass != '9' AND deviceclass IS NOT NULL
-            AND initflag=1 AND startdate <= CONVERT(VARCHAR(10),GETDATE(),120) AND enddate IS NULL) zrm LEFT OUTER JOIN
+            AND initflag=1 AND startdate <= CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE(),120) AND enddate IS NULL) zrm LEFT OUTER JOIN
             (SELECT detailno,deviceid,pattern,time,value,rpoint FROM AZW142_scenariodtl WHERE scenarioid='$scenarioId' ) sd
             ON zrm.deviceid = sd.deviceid ORDER BY zrm.nodeorder,zrm.zi";
 

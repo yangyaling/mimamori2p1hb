@@ -22,7 +22,7 @@ if ($conn) {
 //    $staffId = 'sw00001';
 //    $hostCd ='host01';
 
-    $sql = "SELECT fv.facilitycd,fv.facilityname2 FROM AZW001_frscview fv WHERE staffid = '$staffId' AND fv.hostcd = '$hostCd'
+    $sql = "SELECT fv.facilitycd,fv.facilityname2 FROM AZW003_facilitymst fv WHERE fv.hostcd = '$hostCd'
             GROUP BY fv.facilitycd,fv.facilityname2 ORDER BY fv.facilitycd";
 
     $result = sqlsrv_query($conn, $sql);

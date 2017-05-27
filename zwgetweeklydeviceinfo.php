@@ -187,11 +187,11 @@ function getThisWeekDateArray2($conn, $arrCnt, $baseDate, $subDays, $staffId, $c
     $sqlBS = ",ISNULL(bs.bs,'0') bs";
     $sqlBSWhere = "LEFT OUTER JOIN (SELECT bzd.nodeid,CASE WHEN bzd.mv > 0 THEN '2' WHEN bzd.mv = 0 AND vzd.mv > 0 THEN '1'
                     WHEN bzd.mv = 0 AND vzd.mv = 0 THEN '3' ELSE '4' END bs FROM (SELECT zrm.nodeid,COUNT(zd.value) mv
-                    FROM (SELECT nodeid,deviceid FROM AZW230_sensormstview WHERE initflag=1 AND startdate <= CONVERT(VARCHAR(10),GETDATE(),120)
+                    FROM (SELECT nodeid,deviceid FROM AZW230_sensormstview WHERE initflag=1 AND startdate <= CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE(),120)
                     AND enddate IS NULL AND devicetype = '6') zrm LEFT OUTER JOIN AZW133_zworksdata zd ON zrm.deviceid = zd.deviceid
                     AND zd.timestmp >= CAST(DATEDIFF(ss,'1970-01-01 00:00:00',DATEADD(hh,-1,'" . date('Y-m-d H:i:s') . "')) - 32400 AS BIGINT) * 1000 GROUP BY zrm.nodeid) bzd
                     LEFT OUTER JOIN (SELECT zrm.nodeid,COUNT(zd.value) mv FROM (SELECT nodeid,deviceid FROM AZW230_sensormstview
-                    WHERE initflag=1 AND startdate <= CONVERT(VARCHAR(10),GETDATE(),120) AND enddate IS NULL AND devicetype != '6') zrm
+                    WHERE initflag=1 AND startdate <= CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE(),120) AND enddate IS NULL AND devicetype != '6') zrm
                     LEFT OUTER JOIN AZW133_zworksdata zd ON zrm.deviceid = zd.deviceid
                     AND zd.timestmp >= CAST(DATEDIFF(ss,'1970-01-01 00:00:00',DATEADD(hh,-1,'" . date('Y-m-d H:i:s') . "')) - 32400 AS BIGINT) * 1000 GROUP BY zrm.nodeid) vzd
                     ON bzd.nodeid = vzd.nodeid) bs ON bs.nodeid = zdm.nodeid";
@@ -332,11 +332,11 @@ function getOldWeekDateArray2($conn, $arrCnt, $baseDate, $staffId, $customerId, 
     $sqlBS = ",ISNULL(bs.bs,'0') bs";
     $sqlBSWhere = "LEFT OUTER JOIN (SELECT bzd.nodeid,CASE WHEN bzd.mv > 0 THEN '2' WHEN bzd.mv = 0 AND vzd.mv > 0 THEN '1'
                     WHEN bzd.mv = 0 AND vzd.mv = 0 THEN '3' ELSE '4' END bs FROM (SELECT zrm.nodeid,COUNT(zd.value) mv
-                    FROM (SELECT nodeid,deviceid FROM AZW230_sensormstview WHERE initflag=1 AND startdate <= CONVERT(VARCHAR(10),GETDATE(),120)
+                    FROM (SELECT nodeid,deviceid FROM AZW230_sensormstview WHERE initflag=1 AND startdate <= CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE(),120)
                     AND enddate IS NULL AND devicetype = '6') zrm LEFT OUTER JOIN AZW133_zworksdata zd ON zrm.deviceid = zd.deviceid
                     AND zd.timestmp >= CAST(DATEDIFF(ss,'1970-01-01 00:00:00',DATEADD(hh,-1,'" . date('Y-m-d H:i:s') . "')) - 32400 AS BIGINT) * 1000 GROUP BY zrm.nodeid) bzd
                     LEFT OUTER JOIN (SELECT zrm.nodeid,COUNT(zd.value) mv FROM (SELECT nodeid,deviceid FROM AZW230_sensormstview
-                    WHERE initflag=1 AND startdate <= CONVERT(VARCHAR(10),GETDATE(),120) AND enddate IS NULL AND devicetype != '6') zrm
+                    WHERE initflag=1 AND startdate <= CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE(),120) AND enddate IS NULL AND devicetype != '6') zrm
                     LEFT OUTER JOIN AZW133_zworksdata zd ON zrm.deviceid = zd.deviceid
                     AND zd.timestmp >= CAST(DATEDIFF(ss,'1970-01-01 00:00:00',DATEADD(hh,-1,'" . date('Y-m-d H:i:s') . "')) - 32400 AS BIGINT) * 1000 GROUP BY zrm.nodeid) vzd
                     ON bzd.nodeid = vzd.nodeid) bs ON bs.nodeid = zdm.nodeid";

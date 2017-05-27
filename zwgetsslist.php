@@ -54,7 +54,7 @@ function getSensorPlaceList($conn, $staffId, $customerId, &$code)
             ISNULL(smv.nodetype,'') nodetype,ut.mainnodeid,smv.norder,smv.displaycd,smv.memo,smv.serial,smv.startdate,smv.initflag
             FROM AZW230_sensormstview smv INNER JOIN AZW001_frscview ut ON ut.staffid='$staffId' AND ut.custid='$customerId'
             AND ut.roomcd=smv.roomcd AND ut.floorno=smv.floorno AND smv.nodetype IS NOT NULL
-            AND smv.startdate<=CONVERT(VARCHAR(10),GETDATE(),120) AND smv.enddate IS NULL ORDER BY smv.norder";
+            AND smv.startdate<=CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE(),120) AND smv.enddate IS NULL ORDER BY smv.norder";
 
     $result = sqlsrv_query($conn, $sql);
     $sensorPlaceList = array();

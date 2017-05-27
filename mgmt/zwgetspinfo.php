@@ -33,7 +33,10 @@ if ($conn) {
     }
 
     if ($code == '200') {
-        $sql = "SELECT ISNULL(l.nodetype,m.nc) nodetype,m.nv,ISNULL(l.devicetype,m.dc) devicetype,m.dv,l.pattern,l.time,l.value,l.rpoint,ISNULL(l.scopecd,'-') scopecd,CONVERT(VARCHAR(5),l.starttime,108) starttime,CONVERT(VARCHAR(5),l.endtime,108) endtime
+        $sql = "SELECT ISNULL(l.nodetype,m.nc) nodetype,m.nv,ISNULL(l.devicetype,m.dc) devicetype,m.dv,l.pattern,
+                ISNULL(CAST(l.time AS VARCHAR(30)),'-') time,ISNULL(CAST(l.value AS VARCHAR(30)),'-') value,
+                ISNULL(CAST(l.rpoint AS VARCHAR(30)),'-') rpoint,ISNULL(l.scopecd,'-') scopecd,CONVERT(VARCHAR(5),
+                l.starttime,108) starttime,CONVERT(VARCHAR(5),l.endtime,108) endtime
                 FROM (SELECT n.[code] nc,n.[value] nv,d.[code] dc,d.[value] dv FROM [AZW110_classmst] d
                 LEFT OUTER JOIN [AZW110_classmst] n ON n.classcd='" . CLASS_NODE_TYPE . "'
                 AND n.[code]='" . (($nodeType == '2') ? '2' : '1') . "' WHERE d.classcd='" . CLASS_DEVICE_TYPE . "'
@@ -58,10 +61,10 @@ if ($conn) {
                     'nodetypename' => $row[1],
                     'devicetype' => $row[2],
                     'devicetypename' => $row[3],
-                    'pattern' => ($row[4] == null) ? '-' : $row[4],
-                    'time' => ($row[5] == null) ? '-' : $row[5],
-                    'value' => ($row[2] > 3) ? '0' : (($row[6] == null) ? '-' : $row[6]),
-                    'rpoint' => ($row[7] == null) ? '-' : $row[7]
+                    'pattern' => $row[4],
+                    'time' => $row[5],
+                    'value' => $row[6],
+                    'rpoint' => $row[7]
                 );
                 $index = $index + 1;
             }

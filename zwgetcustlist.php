@@ -26,21 +26,22 @@ $customerList = array();
 if ($conn) {
 //    $facilityCd = '0001';
 //    $staffId = 'sw00001';
-//    $hasSensorData = '0';
+//    $hasSensorData = '1';
 
     if ($hasSensorData == '1') {
-        $sql = "SELECT DISTINCT clv.custid,clv.custname,clv.dispname,clv.resultname,clv.roomcd,clv.tvalue,clv.tunit,clv.bvalue,
-                clv.bunit,clv.bd,clv.picpath,clv.picupdatedate,clv.hvalue,clv.hunit FROM AZW200_custstatuslistview clv
-                INNER JOIN AZW230_sensormstview sv ON sv.custid=clv.custid AND sv.initflag=1 AND sv.startdate <= CONVERT(VARCHAR(10),GETDATE(),120)
-                AND (sv.enddate IS NULL OR sv.enddate >= CONVERT(VARCHAR(10),GETDATE(),120))
-                WHERE clv.staffid='$staffId' AND clv.facilitycd='$facilityCd' ORDER BY clv.custid";
+        $sql = "SELECT t.custid,t.custname,t.dispname,t.resultname,t.roomcd,t.tvalue,t.tunit,t.bvalue,t.bunit,t.bd,t.picpath,t.picupdatedate,
+                t.hvalue,t.hunit FROM (SELECT DISTINCT clv.floorno,clv.custid,clv.custname,clv.dispname,clv.resultname,clv.roomcd,clv.tvalue,
+                clv.tunit,clv.bvalue,clv.bunit,clv.bd,clv.picpath,clv.picupdatedate,clv.hvalue,clv.hunit FROM AZW200_custstatuslistview clv
+                INNER JOIN AZW230_sensormstview sv ON sv.custid=clv.custid AND sv.initflag=1 AND sv.startdate <= CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE(),120)
+                AND (sv.enddate IS NULL OR sv.enddate >= CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE(),120)) WHERE clv.staffid='$staffId' AND clv.facilitycd='$facilityCd') t
+                ORDER BY CASE WHEN t.resultname = '設定なし' THEN 1 ELSE 0 END, t.floorno,t.roomcd";
     } else {
         $sql = "SELECT ui.custid,ui.custname user0name,ut.mainnodename dispname,ut.roomcd,ut.picpath,ut.picupdatedate,sc.nodecnt,ut.floorno
                 FROM AZW001_frscview ut LEFT OUTER JOIN AZW005_custmst ui ON ut.custid=ui.custid
                 LEFT OUTER JOIN (SELECT roomcd,floorno,COUNT(DISTINCT nodeid) nodecnt FROM AZW230_sensormstview
-                WHERE enddate IS NULL AND startdate <= CONVERT(VARCHAR(10),GETDATE(),120) AND nodetype IS NOT NULL
+                WHERE enddate IS NULL AND startdate <= CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE(),120) AND nodetype IS NOT NULL
                 GROUP BY roomcd,floorno) sc ON sc.roomcd=ut.roomcd AND sc.floorno=ut.floorno
-                WHERE ut.staffid='$staffId' AND facilitycd='$facilityCd' ORDER BY ut.custid";
+                WHERE ut.staffid='$staffId' AND facilitycd='$facilityCd' ORDER BY ut.floorno,ut.roomcd";
     }
 
     $result = sqlsrv_query($conn, $sql);

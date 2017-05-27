@@ -42,7 +42,7 @@ if (!is_empty($password) && !is_empty($confirmPassword) && $password == $confirm
         if (!sqlsrv_has_rows($result)) {
             $sql = "INSERT INTO AZW101_usermst (userid,groupid,usertype,username,nickname,contact,password,email,
                     updatedate,yobi,zworksemail,zworkspassword) VALUES ('$userId','$groupId','$userType','$username',
-                    '$nickname','$contact','$password','$email',GETDATE(),'$yobi','$zWorksEmail','$zWorksPassword')";
+                    '$nickname','$contact','$password','$email'," . SCH . ".GETJPDATE(),'$yobi','$zWorksEmail','$zWorksPassword')";
 
             $result = sqlsrv_query($conn, $sql);
             if (!$result) {

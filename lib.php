@@ -39,7 +39,7 @@ define("CLASS_USER_TYPE", "usertype");
 define("CLASS_UNREGIST", "未登録");
 define("CLASS_NAME_UNREGIST", "未登録");
 
-define("SYS_DATE_YYYYMMDDHHMMSS", "CONVERT(VARCHAR(19),GETDATE(),120)");
+define("SYS_DATE_YYYYMMDDHHMMSS", "CONVERT(VARCHAR(19),sch001.GETJPDATE(),120)");
 
 define("DEFAULT_FACILITY_CD", "xxxx");
 define("DEFAULT_FACILITY_NAME", "すべて");

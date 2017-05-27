@@ -56,7 +56,7 @@ function updateSessionId($conn, &$code)
                             $sessionId = str_replace('SESSID=', '', $sessionId);
                             $sessionId = substr($sessionId, 0, strpos($sessionId, ";"));
                             $sql = "UPDATE AZW131_zworksusermst
-                                    SET updatetime=GETDATE(),sessionid='$sessionId',sessionstatus='有効'
+                                    SET updatetime=" . SCH . ".GETJPDATE(),sessionid='$sessionId',sessionstatus='有効'
                                     WHERE email='$email'";
                             $result = sqlsrv_query($conn, $sql);
                             if (!$result) {
@@ -234,7 +234,7 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
                 $st = '有効';
             }
 
-            $sql = "UPDATE AZW131_zworksusermst SET updatetime=GETDATE(),sessionstatus='$st' WHERE email='$email'";
+            $sql = "UPDATE AZW131_zworksusermst SET updatetime=" . SCH . ".GETJPDATE(),sessionstatus='$st' WHERE email='$email'";
             $result = sqlsrv_query($conn, $sql);
             if (!$result) {
                 $errors = sqlsrv_errors();

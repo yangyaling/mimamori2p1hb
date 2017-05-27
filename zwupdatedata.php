@@ -56,7 +56,7 @@ function updateSessionId($conn, &$code)
                             $sessionId = str_replace('SESSID=', '', $sessionId);
                             $sessionId = substr($sessionId, 0, strpos($sessionId, ";"));
                             $sql = "UPDATE AZW131_zworksusermst
-                                    SET updatetime=GETDATE(),sessionid='$sessionId',sessionstatus='有効'
+                                    SET updatetime=" . SCH . ".GETJPDATE(),sessionid='$sessionId',sessionstatus='有効'
                                     WHERE email='$email'";
                             $result = sqlsrv_query($conn, $sql);
                             if (!$result) {
@@ -102,7 +102,7 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
         $deviceList = sqlsrv_query($conn, $sql);
 
         if ($deviceList) {
-            $iSql = "INSERT INTO mimamoriInputDB.dbo.AZW133_zworksdata (deviceid,[value],unit,timestmp,[date],[hour],[minute],saveflg) VALUES ";
+            $iSql = "INSERT INTO mimamoriInputDB." . SCH . ".AZW133_zworksdata (deviceid,[value],unit,timestmp,[date],[hour],[minute],saveflg) VALUES ";
 
             while ($row = sqlsrv_fetch_array($deviceList)) {
                 $email = $row[0];
@@ -180,7 +180,7 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
                         $lastTimestamp = 0;
                         if ($res) {
                             $i1 = 0;
-                            $sql = "DELETE FROM mimamoriInputDB.dbo.AZW133_zworksdata
+                            $sql = "DELETE FROM mimamoriInputDB." . SCH . ".AZW133_zworksdata
                                 WHERE deviceid = '$deviceId' AND timestmp >= $startTime";
                             $result = sqlsrv_query($conn, $sql);
                             if (!$result) {
@@ -211,8 +211,7 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
                                 }
                             }
                             if ($lastTimestamp != 0) {
-                                $sql = "UPDATE mimamoriDB2.dbo.AZW137_zworksdevicemst
-                                    SET [timestamp]=$lastTimestamp WHERE deviceid='$deviceId'";
+                                $sql = "UPDATE AZW137_zworksdevicemst SET [timestamp]=$lastTimestamp WHERE deviceid='$deviceId'";
                                 $result = sqlsrv_query($conn, $sql);
                                 if (!$result) {
                                     $errors = sqlsrv_errors();
@@ -236,7 +235,7 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
                 $st = '有効';
             }
 
-            $sql = "UPDATE AZW131_zworksusermst SET updatetime=GETDATE(),sessionstatus='$st' WHERE email='$email'";
+            $sql = "UPDATE AZW131_zworksusermst SET updatetime=" . SCH . ".GETJPDATE(),sessionstatus='$st' WHERE email='$email'";
             $result = sqlsrv_query($conn, $sql);
             if (!$result) {
                 $errors = sqlsrv_errors();

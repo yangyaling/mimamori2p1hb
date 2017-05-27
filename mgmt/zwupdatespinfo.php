@@ -51,7 +51,7 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
                 $rPoint = $data['rpoint'];
 
                 $sql = "INSERT INTO AZW006_scenarioprotomst (protoid,protoname,nodetype,scopecd,starttime,endtime,devicetype,pattern,[time],[value],rpoint,updateuser,updatedate)
-                    VALUES('$protoId','$protoName','$nodeType','$scopeCd','$startTime','$endTime','$deviceType','$pattern','$time','$value','$rPoint','admin',GETDATE())";
+                    VALUES('$protoId','$protoName','$nodeType','$scopeCd','$startTime','$endTime','$deviceType','$pattern','$time','$value','$rPoint','admin'," . SCH . ".GETJPDATE())";
 
                 $result = sqlsrv_query($conn, $sql);
                 if (!$result) {

@@ -57,7 +57,7 @@ if ($conn) {
             $noticeType = sqlsrv_get_field($result, 1);
             if ($status == '0') {
                 if ($noticeType == '1') {
-                    $sql = "UPDATE AZW121_noticetbl SET status='1',confirmdate=GETDATE() WHERE noticeid='$noticeId'";
+                    $sql = "UPDATE AZW121_noticetbl SET status='1',confirmdate=" . SCH . ".GETJPDATE() WHERE noticeid='$noticeId'";
                 } else {
                     $sql = "UPDATE AZW121_noticetbl SET status='1',confirmuser='$confirmUser',confirmdate='$registDate'
                             WHERE noticeid='$noticeId'";

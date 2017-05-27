@@ -19,7 +19,7 @@ function getDeviceInfo($conn, $staffId, $customerId, $deviceClass, $nodeId = '')
     }
 
     $sqlDeviceInfo = "SELECT zrm.roomcd,zrm.floorno,zrm.nodeid,zrm.deviceid,zrm.devicetype,zrm.devicename,zrm.unit,zrm.nodename,zrm.displayname,zrm.norder nodeorder,zrm.dorder
-                      FROM AZW001_frscview ut,AZW230_sensormstview zrm WHERE zrm.initflag=1 AND zrm.startdate <= CONVERT(VARCHAR(10),GETDATE(),120) AND zrm.enddate IS NULL AND ut.staffid='$staffId' AND ut.custid='$customerId'
+                      FROM AZW001_frscview ut,AZW230_sensormstview zrm WHERE zrm.initflag=1 AND zrm.startdate <= CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE(),120) AND zrm.enddate IS NULL AND ut.staffid='$staffId' AND ut.custid='$customerId'
                       AND ut.roomcd=zrm.roomcd AND ut.floorno=zrm.floorno AND zrm.deviceclass='$deviceClass' $sqlWhere";
 
     $sql = "SELECT zdm.roomcd,zdm.nodeid,zdm.deviceid,zdm.devicetype,zdm.devicename,zdm.unit,zd.value,
@@ -68,11 +68,11 @@ function getBatteryStatus($conn, $nodeId, $nowDate)
 
     $sql = "SELECT CASE WHEN bzd.mv > 0 THEN '2' WHEN bzd.mv = 0 AND vzd.mv > 0 THEN '1' WHEN bzd.mv = 0
             AND vzd.mv = 0 THEN '3' ELSE '4' END FROM (SELECT zrm.nodeid,COUNT(zd.value) mv FROM (
-            SELECT nodeid,deviceid FROM AZW230_sensormstview WHERE initflag=1 AND startdate <= CONVERT(VARCHAR(10),GETDATE(),120) AND enddate IS NULL AND nodeid = '$nodeId' AND devicetype = '6') zrm
+            SELECT nodeid,deviceid FROM AZW230_sensormstview WHERE initflag=1 AND startdate <= CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE(),120) AND enddate IS NULL AND nodeid = '$nodeId' AND devicetype = '6') zrm
             LEFT OUTER JOIN AZW133_zworksdata zd ON zrm.deviceid = zd.deviceid AND zd.timestmp >= CAST(
             DATEDIFF(ss,'1970-01-01 00:00:00',DATEADD(hh,-1,'$nowDate')) - 32400 AS BIGINT) * 1000
             GROUP BY zrm.nodeid) bzd LEFT OUTER JOIN (SELECT zrm.nodeid,COUNT(zd.value) mv FROM (
-            SELECT nodeid,deviceid FROM AZW230_sensormstview WHERE initflag=1 AND startdate <= CONVERT(VARCHAR(10),GETDATE(),120) AND enddate IS NULL AND nodeid = '$nodeId' AND devicetype != '6') zrm
+            SELECT nodeid,deviceid FROM AZW230_sensormstview WHERE initflag=1 AND startdate <= CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE(),120) AND enddate IS NULL AND nodeid = '$nodeId' AND devicetype != '6') zrm
             LEFT OUTER JOIN AZW133_zworksdata zd ON zrm.deviceid = zd.deviceid AND zd.timestmp >= CAST(
             DATEDIFF(ss,'1970-01-01 00:00:00',DATEADD(hh,-1,'$nowDate')) - 32400 AS BIGINT) * 1000
             GROUP BY zrm.nodeid) vzd ON bzd.nodeid = vzd.nodeid";

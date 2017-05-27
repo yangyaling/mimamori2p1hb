@@ -61,9 +61,9 @@ function checkScenario($conn, $scenarioId, $scenarioName, $staffId, $customerId,
             $sqlSensorResult = "MERGE INTO AZW143_sensorresulttbl s USING (SELECT '$staffId' staffid,'$customerId' custid,
                            '$scenarioId' scenarioid,'$deviceId' deviceid) u
                            ON s.scenarioid = u.scenarioid AND s.deviceid=u.deviceid WHEN MATCHED THEN
-                           UPDATE SET updatedate = GETDATE() WHEN NOT MATCHED THEN
+                           UPDATE SET updatedate = " . SCH . ".GETJPDATE() WHEN NOT MATCHED THEN
                            INSERT (staffid,custid,scenarioid,deviceid,result,updatedate)
-                           VALUES ('$staffId','$customerId','$scenarioId','$deviceId','異常検知あり',GETDATE());";
+                           VALUES ('$staffId','$customerId','$scenarioId','$deviceId','異常検知あり'," . SCH . ".GETJPDATE());";
             $resultSensorResult = sqlsrv_query($conn, $sqlSensorResult);
 
             if (!$resultSensorResult) {
@@ -76,10 +76,10 @@ function checkScenario($conn, $scenarioId, $scenarioName, $staffId, $customerId,
                         USING (SELECT '$staffId' staffid,'$customerId' custid,'$scenarioId' scenarioid) u
                         ON s.receiveuser = u.staffid AND s.senduser=u.custid AND s.subtitle = u.scenarioid AND s.status = '0'
                         WHEN MATCHED THEN
-                        UPDATE SET title = '$scenarioName',registdate = GETDATE()
+                        UPDATE SET title = '$scenarioName',registdate = " . SCH . ".GETJPDATE()
                         WHEN NOT MATCHED THEN
                         INSERT (title,senduser,receiveuser,noticetype,status,subtitle,registdate)
-                        VALUES ('$scenarioName','$customerId','$staffId','1','0','$scenarioId',GETDATE());";
+                        VALUES ('$scenarioName','$customerId','$staffId','1','0','$scenarioId'," . SCH . ".GETJPDATE());";
             $resultNotice = sqlsrv_query($conn, $sqlNotice);
 
             if (!$resultNotice) {

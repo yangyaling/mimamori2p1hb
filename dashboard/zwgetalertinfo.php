@@ -14,6 +14,7 @@ $arrReturn = array();
 $code = '200';
 $errors = array();
 
+$hostCd = $_POST['hostcd'];
 $facilityCd = $_POST['facilitycd'];
 $floorNo = $_POST['floorno'];
 $staffId = $_POST['staffid'];
@@ -27,11 +28,19 @@ $historyInfo = array();
 
 if ($conn) {
     //alert
-    $sql = "SELECT fs.roomcd,fs.custid,fs.custname,CONVERT(VARCHAR(19),nt.registdate,120) registdate,fs.staffid,sm.staffname
-            FROM AZW121_noticetbl nt INNER JOIN (SELECT DISTINCT sr.staffid,fv.roomcd,fv.custid,fv.custname FROM AZW001_frscview fv
-            INNER JOIN AZW007_staffrelation sr ON sr.facilitycd=fv.facilitycd WHERE fv.staffid='$staffId') fs
-            ON fs.staffid=nt.receiveuser AND fs.custid=nt.senduser LEFT OUTER JOIN AZW004_staffmst sm ON sm.staffid=fs.staffid
-            WHERE nt.noticetype='1' AND nt.status='0' ORDER BY fs.roomcd,nt.registdate DESC";
+    if ($facilityCd == DEFAULT_FACILITY_CD) {
+        $sql = "SELECT fs.roomcd,fs.custid,fs.custname,CONVERT(VARCHAR(19),nt.registdate,120) registdate,fs.staffid,sm.staffname,fs.facilityname2,fs.floorno
+                FROM AZW121_noticetbl nt INNER JOIN (SELECT DISTINCT sr.staffid,fv.roomcd,fv.custid,fv.custname,fv.facilityname2,fv.floorno FROM AZW001_frscview fv
+                INNER JOIN AZW007_staffrelation sr ON sr.facilitycd=fv.facilitycd WHERE fv.hostcd='$hostCd') fs
+                ON fs.staffid=nt.receiveuser AND fs.custid=nt.senduser LEFT OUTER JOIN AZW004_staffmst sm ON sm.staffid=fs.staffid
+                WHERE nt.noticetype='1' AND nt.status='0' ORDER BY fs.roomcd,nt.registdate DESC";
+    } else {
+        $sql = "SELECT fs.roomcd,fs.custid,fs.custname,CONVERT(VARCHAR(19),nt.registdate,120) registdate,fs.staffid,sm.staffname,fs.facilityname2,fs.floorno
+                FROM AZW121_noticetbl nt INNER JOIN (SELECT DISTINCT sr.staffid,fv.roomcd,fv.custid,fv.custname,fv.facilityname2,fv.floorno FROM AZW001_frscview fv
+                INNER JOIN AZW007_staffrelation sr ON sr.facilitycd=fv.facilitycd WHERE fv.facilitycd='$facilityCd') fs
+                ON fs.staffid=nt.receiveuser AND fs.custid=nt.senduser LEFT OUTER JOIN AZW004_staffmst sm ON sm.staffid=fs.staffid
+                WHERE nt.noticetype='1' AND nt.status='0' ORDER BY fs.roomcd,nt.registdate DESC";
+    }
 
     if ($result = sqlsrv_query($conn, $sql)) {
         $index = 0;
@@ -43,7 +52,9 @@ if ($conn) {
                 'username0' => $row[2],
                 'registdate' => $row[3],
                 'userid1' => $row[4],
-                'username1' => $row[5]
+                'username1' => $row[5],
+                'facilityname2' => $row[6],
+                'floorno' => $row[7]
             );
             $index++;
         }

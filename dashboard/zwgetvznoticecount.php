@@ -13,6 +13,9 @@ $arrReturn = array();
 $code = '200';
 $errors = array();
 
+$hostCd = $_POST['hostcd'];
+$facilityCd = $_POST['facilitycd'];
+$floorNo = $_POST['floorno'];
 $staffId = $_POST['staffid'];
 $regDate = $_POST['registdate'];
 

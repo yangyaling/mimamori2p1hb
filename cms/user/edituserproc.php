@@ -44,7 +44,7 @@ if ($editPwdFlg != '1' || ($editPwdFlg == '1' && !is_empty($newPassword) && !is_
                     $pwdSql = ",password='$newPassword'";
                 }
                 $sql = "UPDATE AZW101_usermst SET groupid='$groupId',usertype='$userType',username='$username',
-                        nickname='$nickname',contact='$contact'$pwdSql,email='$email',updatedate=GETDATE(),
+                        nickname='$nickname',contact='$contact'$pwdSql,email='$email',updatedate=" . SCH . ".GETJPDATE(),
                         yobi='$yobi',zworksemail='$zWorksEmail',zworkspassword='$zWorksPassword' WHERE userid='$userId'";
 
                 $result = sqlsrv_query($conn, $sql);
