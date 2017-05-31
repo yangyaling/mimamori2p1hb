@@ -9,7 +9,7 @@ $connectionOptions = array(
 $conn = sqlsrv_connect("tcp:mimamori.database.windows.net,1433", $connectionOptions);
 
 //调用存储过程，并填充参数
-$callSP = " [sch001].[zwcreateactiondata] ";
+$callSP = " [sch001].[zwcheckscenario] ";
 
 $stmt = sqlsrv_query($conn, $callSP);
 
