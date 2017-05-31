@@ -122,7 +122,7 @@ function getDeviceIdByDisplayCdWithDeviceType($conn, $customerId, $displayCd, $d
     $deviceId = '';
 
     $sql = "SELECT TOP 1 sv.deviceid,sv.displayname,sv.devicetypename FROM AZW230_sensormstview sv
-            WHERE sv.custid='$customerId' AND sv.displaycd='$displayCd' AND sv.devicetype='$deviceType'";
+            WHERE sv.custid='$customerId' AND sv.displaycd='$displayCd' AND sv.devicetype='$deviceType' AND sv.enddate IS NULL";
 
     if ($result = sqlsrv_query($conn, $sql)) {
         $row = sqlsrv_fetch_array($result);
