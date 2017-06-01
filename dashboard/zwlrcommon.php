@@ -411,7 +411,7 @@ function getWeeklyLrSumList($conn, $userId0, $dates, $sd, $ed)
 //            AND d.dt >= '$sd' AND d.dt <= '$ed' WHERE vz1.userid = '$userId0' AND vz1.actionid = d.actionid AND vz1.actionclass = d.actionclass AND vz1.vzstartdt = d.vzstartdt
 //            ORDER BY vz1.actionclass,vz1.actionorder,vz1.actionid,d.dt";
     $sql .= "SELECT vz1.actionid + '|' + vz1.actionclass + '|' + vz1.vzstartdt actionid,vz1.actionsummary,d.sdate,d.cnt,d.vavg,d.vmax,d.vmin,vz1.color1,vz1.actionexplain,vz1.actionname
-              FROM AZW150_vzconfig vz1 INNER JOIN zwgetweeklyactionsummary('$userId0','$sd','$ed') d ON d.userid = vz1.userid
+              FROM AZW150_vzconfig vz1 INNER JOIN " . SCH . ".zwgetweeklyactionsummary('$userId0','$sd','$ed') d ON d.userid = vz1.userid
               AND vz1.actionid = d.actionid AND vz1.actionclass = d.actionclass AND vz1.vzstartdt = d.vzstartdt WHERE vz1.userid = '$userId0'
               ORDER BY vz1.actionclass,vz1.actionorder,vz1.actionid,d.sdate";
 
@@ -513,7 +513,7 @@ function getMonthlyLrSumList($conn, $userId0, $dates, $sd, $ed)
 //            ORDER BY vz1.actionclass,vz1.actionorder,vz1.actionid,d.dt";
 
     $sql = "SELECT vz1.actionid + '|' + vz1.actionclass + '|' + vz1.vzstartdt actionid,vz1.actionsummary,d.sdate,d.cnt,d.vavg,d.vmax,d.vmin,vz1.color1,vz1.actionexplain,vz1.actionname
-          FROM AZW150_vzconfig vz1 INNER JOIN zwgetmonthlyactionsummary('$userId0','$sd','$ed') d ON d.userid = vz1.userid
+          FROM AZW150_vzconfig vz1 INNER JOIN " . SCH . ".zwgetmonthlyactionsummary('$userId0','$sd','$ed') d ON d.userid = vz1.userid
           AND vz1.actionid = d.actionid AND vz1.actionclass = d.actionclass AND vz1.vzstartdt = d.vzstartdt WHERE vz1.userid = '$userId0'
           ORDER BY vz1.actionclass,vz1.actionorder,vz1.actionid,d.sdate";
 
@@ -614,7 +614,7 @@ function getYearlyLrSumList($conn, $userId0, $dates, $sd, $ed)
 //            ORDER BY vz1.actionclass,vz1.actionorder,vz1.actionid,d.dt";
 
     $sql = "SELECT vz1.actionid + '|' + vz1.actionclass + '|' + vz1.vzstartdt actionid,vz1.actionsummary,d.sdate,d.cnt,d.vavg,d.vmax,d.vmin,vz1.color1,vz1.actionexplain,vz1.actionname
-          FROM AZW150_vzconfig vz1 INNER JOIN zwgetyearlyactionsummary('$userId0','$sd','$ed') d ON d.userid = vz1.userid
+          FROM AZW150_vzconfig vz1 INNER JOIN " . SCH . ".zwgetyearlyactionsummary('$userId0','$sd','$ed') d ON d.userid = vz1.userid
           AND vz1.actionid = d.actionid AND vz1.actionclass = d.actionclass AND vz1.vzstartdt = d.vzstartdt WHERE vz1.userid = '$userId0'
           ORDER BY vz1.actionclass,vz1.actionorder,vz1.actionid,d.sdate";
 
