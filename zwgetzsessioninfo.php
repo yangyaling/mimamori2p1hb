@@ -7,11 +7,12 @@
  */
 include 'lib.php';
 
-$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
-$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
+//$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
+//$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
+//
+//$arrReturn = array();
+//$arrReturn['code'] = '200';
 
-$arrReturn = array();
-$arrReturn['code'] = '200';
 $arrReturn['zsessioninfo'] = '';
 
 $email = $_POST['email'];
@@ -33,7 +34,7 @@ if ($conn) {
         $index = 0;
         while ($row = sqlsrv_fetch_array($result)) {
             //メールでデバイスID情報を取得
-            $sql2 = "SELECT deviceid FROM AZW230_sensormstview WHERE adminemail='$row[0]' AND initflag=1 AND startdate <= CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE(),120) AND enddate IS NULL";
+            $sql2 = "SELECT deviceid FROM AZW230_sensormstview WHERE adminemail='$row[0]' AND initflag=1 AND startdate <= CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120) AND enddate IS NULL";
             $result2 = sqlsrv_query($conn, $sql2);
             $devices = array();
             if ($result2) {

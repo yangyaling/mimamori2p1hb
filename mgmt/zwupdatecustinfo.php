@@ -7,12 +7,12 @@
  */
 include '../lib.php';
 
-$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
-$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
-
-$arrReturn = array();
-$code = '200';
-$errors = array();
+//$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
+//$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
+//
+//$arrReturn = array();
+//$code = '200';
+//$errors = array();
 
 $customerList = json_decode($_POST['custlist'], true);
 
@@ -36,7 +36,7 @@ if ($conn && sqlsrv_begin_transaction($conn) && !is_empty($customerList)) {
                 break;
             }
         } else if (!is_empty($customerId)) {
-            $sql = "INSERT INTO AZW005_custmst(custid,custname,updatedate)VALUES('$customerId','$customerName'," . SYS_DATE_YYYYMMDDHHMMSS . ")";
+            $sql = "INSERT INTO AZW005_custmst(custid,custname,updatedate)VALUES('$customerId','$customerName',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120))";
 
             $result = sqlsrv_query($conn, $sql);
             if (!$result) {

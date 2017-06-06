@@ -10,12 +10,12 @@ define("H_U", "U");
 
 include '../lib.php';
 
-$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
-$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
-
-$arrReturn = array();
-$code = '200';
-$errors = array();
+//$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
+//$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
+//
+//$arrReturn = array();
+//$code = '200';
+//$errors = array();
 
 $facilityCd = $_POST['facilitycd'];
 $staffId = $_POST['staffid'];
@@ -85,7 +85,7 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
             if ($handleFlag == H_C) {
                 if (!is_empty($serial) && !is_empty($sensorId)) {
                     $sql = "INSERT INTO AZW009_serialrelation(serial,sensorid,facilitycd,custid,startdate)
-                        VALUES('$serial','$sensorId','$facilityCd','$customerId',CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE(),120))";
+                        VALUES('$serial','$sensorId','$facilityCd','$customerId',CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120))";
 
                     if (!$result = sqlsrv_query($conn, $sql)) {
                         $code = '504';
@@ -126,7 +126,7 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
 //                        }
                     } // history
                     else {
-                        $sql = "UPDATE AZW009_serialrelation SET enddate=CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE(),120)
+                        $sql = "UPDATE AZW009_serialrelation SET enddate=CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120)
                             WHERE serial='$oldSerial' AND sensorid='$oldSensorId' AND startdate='$startDate'";
 
                         if (!$result = sqlsrv_query($conn, $sql)) {
@@ -137,7 +137,7 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
 
                         if (!is_empty($serial) && !is_empty($sensorId)) {
                             $sql = "INSERT INTO AZW009_serialrelation(serial,sensorid,facilitycd,custid,startdate) VALUES
-                                ('$serial','$sensorId','$facilityCd','$customerId',CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE()+1,120))";
+                                ('$serial','$sensorId','$facilityCd','$customerId',CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE()+1,120))";
 
                             if (!$result = sqlsrv_query($conn, $sql)) {
                                 $code = '508';

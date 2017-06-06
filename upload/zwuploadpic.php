@@ -9,12 +9,12 @@ header('Content-type: text/json; charset=UTF-8');
 
 include '../lib.php';
 
-$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
-$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
-
-$arrReturn = array();
-$code = '200';
-$errors = array();
+//$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
+//$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
+//
+//$arrReturn = array();
+//$code = '200';
+//$errors = array();
 
 $customerId = $_POST['custid'];
 $updateDate = $_POST['updatedate'];

@@ -7,12 +7,12 @@
  */
 include 'lib.php';
 
-$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
-$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
-
-$arrReturn = array();
-$code = '200';
-$errors = array();
+//$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
+//$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
+//
+//$arrReturn = array();
+//$code = '200';
+//$errors = array();
 
 $noticeId = $_POST['noticeid'];
 
@@ -57,7 +57,7 @@ if ($conn) {
             $noticeType = sqlsrv_get_field($result, 1);
             if ($status == '0') {
                 if ($noticeType == '1') {
-                    $sql = "UPDATE AZW121_noticetbl SET status='1',confirmdate=" . SCH . ".GETJPDATE() WHERE noticeid='$noticeId'";
+                    $sql = "UPDATE AZW121_noticetbl SET status='1',confirmdate=" . $SCH . ".GETJPDATE() WHERE noticeid='$noticeId'";
                 } else {
                     $sql = "UPDATE AZW121_noticetbl SET status='1',confirmuser='$confirmUser',confirmdate='$registDate'
                             WHERE noticeid='$noticeId'";

@@ -7,12 +7,12 @@
  */
 include '../lib.php';
 
-$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
-$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
-
-$arrReturn = array();
-$code = '200';
-$errors = array();
+//$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
+//$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
+//
+//$arrReturn = array();
+//$code = '200';
+//$errors = array();
 
 $facilityCd = $_POST['facilitycd'];
 $roomList = json_decode($_POST['roomlist'], true);
@@ -48,7 +48,7 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
                     }
                 } else {
                     $sql = "INSERT INTO AZW134_roommst(roomcd,floorno,facilitycd,updateuser,updatedate)
-                            VALUES('$roomCd','$floorNo','$facilityCd','admin'," . SCH . ".GETJPDATE())";
+                            VALUES('$roomCd','$floorNo','$facilityCd','admin'," . $SCH . ".GETJPDATE())";
                     if (!$result = sqlsrv_query($conn, $sql)) {
                         $code = '503';
                         $errors = sqlsrv_errors();

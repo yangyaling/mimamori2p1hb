@@ -7,11 +7,11 @@
  */
 include 'lib.php';
 
-$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
-$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
-
-$arrReturn = array();
-$code = '200';
+//$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
+//$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
+//
+//$arrReturn = array();
+//$code = '200';
 
 $staffId = $_POST['staffid'];
 $customerId = $_POST['custid'];
@@ -50,11 +50,13 @@ function getScenarioList($conn, $staffId, $customerId, &$code)
 
 function getSensorPlaceList($conn, $staffId, $customerId, &$code)
 {
+    global $SCH;
+
     $sql = "SELECT DISTINCT smv.roomcd,smv.gatewayid,smv.nodeid,smv.nodename,smv.displayname,smv.place,smv.placename,
             ISNULL(smv.nodetype,'') nodetype,ut.mainnodeid,smv.norder,smv.displaycd,smv.memo,smv.serial,smv.startdate,smv.initflag
             FROM AZW230_sensormstview smv INNER JOIN AZW001_frscview ut ON ut.staffid='$staffId' AND ut.custid='$customerId'
             AND ut.roomcd=smv.roomcd AND ut.floorno=smv.floorno AND smv.nodetype IS NOT NULL
-            AND smv.startdate<=CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE(),120) AND smv.enddate IS NULL ORDER BY smv.norder";
+            AND smv.startdate<=CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120) AND smv.enddate IS NULL ORDER BY smv.norder";
 
     $result = sqlsrv_query($conn, $sql);
     $sensorPlaceList = array();

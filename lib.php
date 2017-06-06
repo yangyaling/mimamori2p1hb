@@ -21,9 +21,9 @@ define("MYSQL_DB", "rdbeacoAd7N1JMXE");
 
 define("SERVERNAME", "tcp:mimamori.database.windows.net,1433");
 define("DATABASE", "mimamoriDB2");
-define("UID", "sch001");
+//define("UID", "sch001");
 define("PWD", "Passw0rd");
-define("SCH", "sch001");
+//define("SCH", "sch001");
 
 define("HASLOGINED", "isloginuser");
 define("LOGINUSER", "loginuser");
@@ -39,7 +39,7 @@ define("CLASS_USER_TYPE", "usertype");
 define("CLASS_UNREGIST", "未登録");
 define("CLASS_NAME_UNREGIST", "未登録");
 
-define("SYS_DATE_YYYYMMDDHHMMSS", "CONVERT(VARCHAR(19),sch001.GETJPDATE(),120)");
+//define("SYS_DATE_YYYYMMDDHHMMSS", "CONVERT(VARCHAR(19),sch001.GETJPDATE(),120)");
 
 define("DEFAULT_FACILITY_CD", "xxxx");
 define("DEFAULT_FACILITY_NAME", "すべて");
@@ -118,6 +118,33 @@ function getBaseInfo($conn, $facilityCd)
     }
 
     return $baseInfo;
+}
+
+$SCH = $_POST['hostcd'];
+$UID = $SCH;
+
+$arrReturn = array();
+$code = '200';
+$errors = array();
+
+$connectionOptions = array('Database' => DATABASE, 'Uid' => $UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
+$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
+
+if ($conn) {
+    $sql = "SELECT  1 FROM AZW002_hostmst hm WHERE hm.hostcd='$UID'";
+
+    if ($result = sqlsrv_query($conn, $sql)) {
+        if (!sqlsrv_has_rows($result)) {
+            $code = '302';
+            $errors = array('ホストが存在しません');
+        }
+    } else {
+        $code = '301';
+        $errors = sqlsrv_errors();
+    }
+} else {
+    $code = '300';
+    $errors = sqlsrv_errors();
 }
 
 ?>

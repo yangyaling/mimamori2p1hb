@@ -8,11 +8,12 @@
 include 'lib.php';
 
 //$conn=@mysql_connect(MYSQL_HOST_M,MYSQL_USER,MYSQL_PASS);
-$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
-$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
+//$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
+//$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
+//
+//$arrReturn = array();
+//$arrReturn['code'] = '200';
 
-$arrReturn = array();
-$arrReturn['code'] = '200';
 $arrReturn['userinfo'] = '';
 
 $staffId = $_POST['staffid'];

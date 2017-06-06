@@ -7,11 +7,12 @@
  */
 include 'lib.php';
 
-$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
-$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
+//$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
+//$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
+//
+//$arrReturn = array();
+//$arrReturn['code'] = '200';
 
-$arrReturn = array();
-$arrReturn['code'] = '200';
 $arrReturn['datelist0'] = array();
 $arrReturn['datelist1'] = array();
 $arrReturn['datelist2'] = array();

@@ -7,12 +7,12 @@
  */
 include '../lib.php';
 
-$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
-$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
-
-$arrReturn = array();
-$code = '200';
-$errors = array();
+//$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
+//$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
+//
+//$arrReturn = array();
+//$code = '200';
+//$errors = array();
 
 $facilityCd = $_POST['facilitycd'];
 $staffId = $_POST['staffid'];
@@ -55,7 +55,7 @@ if ($conn) {
     if ($row = sqlsrv_fetch_array(sqlsrv_query($conn, $sql))) {
         $displayName = $row[0];
         $placeName = $row[1];
-        $sql = "UPDATE AZW009_serialrelation SET enddate=CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE(),120)
+        $sql = "UPDATE AZW009_serialrelation SET enddate=CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120)
                 WHERE serial='$oldSerial' $whereSql AND sensorid='$oldSensorId' AND startdate='$startDate'";
 
         $result = sqlsrv_query($conn, $sql);
@@ -71,7 +71,7 @@ if ($conn) {
     if ($code == '200' && !is_empty($oldCustomerId)) {
         $msgContent = $oldSensorId . ' ' . $displayName . ' ' . $placeName;
         $insertSql = "INSERT INTO AZW152_vznoticetbl(receiveuser,senduser,noticetype,title,registdate,content)
-                          SELECT TOP 1 '$staffId','$oldCustomerId','S','センサーの設置情報が更新されました',CONVERT(VARCHAR(19)," . SCH . ".GETJPDATE(),120),
+                          SELECT TOP 1 '$staffId','$oldCustomerId','S','センサーの設置情報が更新されました',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120),
                           '【'+fv.roomcd+'】　'+fv.custname+'さんのセンサーの設置情報が更新されました。\n\n以下のセンサー情報が削除されました。\n$msgContent\n'
                           FROM AZW001_frscview fv WHERE fv.custid='$oldCustomerId'";
 

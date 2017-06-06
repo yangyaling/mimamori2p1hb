@@ -7,12 +7,12 @@
  */
 include '../lib.php';
 
-$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
-$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
-
-$arrReturn = array();
-$code = '200';
-$errors = array();
+//$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
+//$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
+//
+//$arrReturn = array();
+//$code = '200';
+//$errors = array();
 
 $staffId = $_POST['userid1'];
 $customerId = $_POST['userid0'];
@@ -90,6 +90,7 @@ function checkData($data, &$code, &$errors)
 
 function createVZConfig($conn, $customerId, $data, $today, $hasHistory, &$vzHistory, &$code, &$errors)
 {
+    global $SCH;
     $actionId = $data['actionid'];
     $actionName = $data['actionname'];
     $actionClass = $data['actionclass'];
@@ -119,7 +120,7 @@ function createVZConfig($conn, $customerId, $data, $today, $hasHistory, &$vzHist
                 $today = "'" . $today . "'";
             } else {
                 $newActionId = $actionId;
-                $today = "CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE()+1,120)+' 00:00:00'";
+                $today = "CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE()+1,120)+' 00:00:00'";
             }
             if (is_empty($deviceId1 = getDeviceIdByDisplayCdWithDeviceType($conn, $customerId, $displayCd1, $deviceType1, $code, $errors))) {
                 return false;
@@ -374,7 +375,7 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
         if ($code == '200' && !is_empty($vzHistory)) {
             $vzHistory = "さんの可視化の設定の変更が完了しました。\n" . $vzHistory;
             $insertSql = "INSERT INTO AZW152_vznoticetbl(receiveuser,senduser,noticetype,title,registdate,content)
-                          SELECT TOP 1 '$staffId','$customerId','K','可視化設定の変更が完了しました。',CONVERT(VARCHAR(19)," . SCH . ".GETJPDATE(),120),
+                          SELECT TOP 1 '$staffId','$customerId','K','可視化設定の変更が完了しました。',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120),
                           '【'+ut.roomcd+'】　'+ut.custname+'$vzHistory' FROM AZW001_frscview ut WHERE ut.custid='$customerId'";
 
             if (!sqlsrv_query($conn, $insertSql)) {

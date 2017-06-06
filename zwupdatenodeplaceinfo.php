@@ -7,12 +7,12 @@
  */
 include 'lib.php';
 
-$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
-$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
-
-$arrReturn = array();
-$code = '200';
-$errors = array();
+//$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
+//$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
+//
+//$arrReturn = array();
+//$code = '200';
+//$errors = array();
 
 $facilityCd = $_POST['facilitycd'];
 $staffId = $_POST['staffid'];
@@ -63,7 +63,7 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
                             AND sensorid='$sensorId' AND startdate='$startDate'";
                     $result = sqlsrv_query($conn, $sql);
                     if (sqlsrv_has_rows($result)) {
-                        $sql = "UPDATE AZW009_serialrelation SET enddate=CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE(),120)
+                        $sql = "UPDATE AZW009_serialrelation SET enddate=CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120)
                                 WHERE serial='$serial' AND custid='$customerId' AND sensorid='$sensorId' AND startdate='$startDate'";
 
                         $result = sqlsrv_query($conn, $sql);
@@ -79,7 +79,7 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
                     }
                     if (!is_empty($serial) && !is_empty($customerId) && !is_empty($sensorId)) {
                         $sql = "INSERT INTO AZW009_serialrelation(serial,sensorid,facilitycd,custid,displayname,place,memo,startdate,initflag)
-                        VALUES('$serial','$sensorId','$facilityCd','$customerId','$displayCd','$place','$memo',CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE()+1,120),1)";
+                        VALUES('$serial','$sensorId','$facilityCd','$customerId','$displayCd','$place','$memo',CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE()+1,120),1)";
 
                         $result = sqlsrv_query($conn, $sql);
                         if (!$result) {
@@ -172,7 +172,7 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
                 $insertItemMsg = "\n以下のセンサー情報が追加されました。" . $insertItemMsg . "\n";
             }
             $insertSql = "INSERT INTO AZW152_vznoticetbl(receiveuser,senduser,noticetype,title,registdate,content)
-                          SELECT TOP 1 '$staffId','$customerId','S','センサーの設置情報が更新されました',CONVERT(VARCHAR(19)," . SCH . ".GETJPDATE(),120),
+                          SELECT TOP 1 '$staffId','$customerId','S','センサーの設置情報が更新されました',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120),
                           '【'+fv.roomcd+'】　'+fv.custname+'さんのセンサーの設置情報が更新されました。\n$updateItemMsg\n$insertItemMsg'
                           FROM AZW001_frscview fv WHERE fv.custid='$customerId'";
 

@@ -7,12 +7,12 @@
  */
 include '../lib.php';
 
-$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
-$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
-
-$arrReturn = array();
-$code = '200';
-$errors = array();
+//$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
+//$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
+//
+//$arrReturn = array();
+//$code = '200';
+//$errors = array();
 
 $hostCd = $_POST['hostcd'];
 $facilityCd = $_POST['facilitycd'];
@@ -28,7 +28,7 @@ if ($conn) {
 //    $staffId = 'sw00001';
 
     if ($facilityCd == DEFAULT_FACILITY_CD) {
-        $sql = "SELECT fv.roomcd,fv.custid,fv.custname,cv.picpath,DATEDIFF(DAY,CAST(cv.birthday AS DATE)," . SCH . ".GETJPDATE()) / 365 old,
+        $sql = "SELECT fv.roomcd,fv.custid,fv.custname,cv.picpath,DATEDIFF(DAY,CAST(cv.birthday AS DATE)," . $SCH . ".GETJPDATE()) / 365 old,
                 cv.sex,cv.tvalue,cv.tunit,cv.bd,fv.facilityname2,fv.floorno FROM AZW001_frscview fv INNER JOIN AZW134_roommst zwm
                 ON zwm.roomcd=fv.roomcd AND zwm.facilitycd=fv.facilitycd AND zwm.floorno=fv.floorno
                 LEFT OUTER JOIN AZW200_custstatuslistview cv ON fv.custid=cv.custid AND fv.staffid=cv.staffid
@@ -36,7 +36,7 @@ if ($conn) {
                 cv.birthday,cv.sex,cv.tvalue,cv.tunit,cv.bd ORDER BY fv.facilitycd,fv.floorno,fv.roomcd";
     } else {
         $sql = "SELECT fv.roomcd,fv.custid,fv.custname,cv.picpath,
-            DATEDIFF(DAY,CAST(cv.birthday AS DATE)," . SCH . ".GETJPDATE()) / 365 old,cv.sex,cv.tvalue,cv.tunit,cv.bd,fv.facilityname2,fv.floorno
+            DATEDIFF(DAY,CAST(cv.birthday AS DATE)," . $SCH . ".GETJPDATE()) / 365 old,cv.sex,cv.tvalue,cv.tunit,cv.bd,fv.facilityname2,fv.floorno
             FROM AZW001_frscview fv INNER JOIN (SELECT DISTINCT roomcd,floorno,facilitycd FROM AZW134_roommst
             WHERE floorno='$floorNo' AND facilitycd='$facilityCd') zwm ON zwm.roomcd=fv.roomcd AND zwm.facilitycd=fv.facilitycd AND zwm.floorno=fv.floorno
             LEFT OUTER JOIN AZW200_custstatuslistview cv ON fv.custid=cv.custid AND fv.staffid=cv.staffid

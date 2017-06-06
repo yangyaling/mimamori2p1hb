@@ -7,12 +7,12 @@
  */
 include 'lib.php';
 
-$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
-$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
-
-$arrReturn = array();
-$code = '200';
-$errors = array();
+//$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
+//$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
+//
+//$arrReturn = array();
+//$code = '200';
+//$errors = array();
 
 $staffId = $_POST['staffid'];
 $customerId = $_POST['custid'];
@@ -26,6 +26,7 @@ $updateDate = $_POST['updatedate'];
 
 function checkScenario($conn, $scenarioId, $scenarioName, $staffId, $customerId, &$code, &$errors)
 {
+    global $SCH;
     $retVal = 1;
 
     $sql = "SELECT d.deviceid,d.pattern,d.time,d.value,d.rpoint,i.scopecd,CONVERT(VARCHAR(5),i.starttime,108) starttime,CONVERT(VARCHAR(5),i.endtime,108) endtime
@@ -46,7 +47,7 @@ function checkScenario($conn, $scenarioId, $scenarioName, $staffId, $customerId,
         while ($row = sqlsrv_fetch_array($result)) {
             $deviceId = $row[0];
 
-            $sql = "SELECT " . SCH . ".zwcheckscenariodevice2('$scenarioId','$deviceId',$row[1],$row[2],$row[3],'$row[4]','$row[5]','$row[6]','$row[7]') checkresult";
+            $sql = "SELECT " . $SCH . ".zwcheckscenariodevice2('$scenarioId','$deviceId',$row[1],$row[2],$row[3],'$row[4]','$row[5]','$row[6]','$row[7]') checkresult";
             $checkResult = sqlsrv_query($conn, $sql);
             if ($checkResult) {
                 $checkRow = sqlsrv_fetch_array($checkResult);
@@ -61,9 +62,9 @@ function checkScenario($conn, $scenarioId, $scenarioName, $staffId, $customerId,
             $sqlSensorResult = "MERGE INTO AZW143_sensorresulttbl s USING (SELECT '$staffId' staffid,'$customerId' custid,
                            '$scenarioId' scenarioid,'$deviceId' deviceid) u
                            ON s.scenarioid = u.scenarioid AND s.deviceid=u.deviceid WHEN MATCHED THEN
-                           UPDATE SET updatedate = " . SCH . ".GETJPDATE() WHEN NOT MATCHED THEN
+                           UPDATE SET updatedate = " . $SCH . ".GETJPDATE() WHEN NOT MATCHED THEN
                            INSERT (staffid,custid,scenarioid,deviceid,result,updatedate)
-                           VALUES ('$staffId','$customerId','$scenarioId','$deviceId','異常検知あり'," . SCH . ".GETJPDATE());";
+                           VALUES ('$staffId','$customerId','$scenarioId','$deviceId','異常検知あり'," . $SCH . ".GETJPDATE());";
             $resultSensorResult = sqlsrv_query($conn, $sqlSensorResult);
 
             if (!$resultSensorResult) {
@@ -76,10 +77,10 @@ function checkScenario($conn, $scenarioId, $scenarioName, $staffId, $customerId,
                         USING (SELECT '$staffId' staffid,'$customerId' custid,'$scenarioId' scenarioid) u
                         ON s.receiveuser = u.staffid AND s.senduser=u.custid AND s.subtitle = u.scenarioid AND s.status = '0'
                         WHEN MATCHED THEN
-                        UPDATE SET title = '$scenarioName',registdate = " . SCH . ".GETJPDATE()
+                        UPDATE SET title = '$scenarioName',registdate = " . $SCH . ".GETJPDATE()
                         WHEN NOT MATCHED THEN
                         INSERT (title,senduser,receiveuser,noticetype,status,subtitle,registdate)
-                        VALUES ('$scenarioName','$customerId','$staffId','1','0','$scenarioId'," . SCH . ".GETJPDATE());";
+                        VALUES ('$scenarioName','$customerId','$staffId','1','0','$scenarioId'," . $SCH . ".GETJPDATE());";
             $resultNotice = sqlsrv_query($conn, $sqlNotice);
 
             if (!$resultNotice) {

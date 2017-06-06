@@ -7,12 +7,12 @@
  */
 include '../lib.php';
 
-$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
-$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
-
-$arrReturn = array();
-$code = '200';
-$errors = array();
+//$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
+//$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
+//
+//$arrReturn = array();
+//$code = '200';
+//$errors = array();
 
 $hostCd = $_POST['hostcd'];
 //$buildingId = $_POST['buildingid'];
@@ -33,7 +33,7 @@ if ($conn) {
     $today = date('Y-m-d 00:00:00');
 
     if ($facilityCd == DEFAULT_FACILITY_CD) {
-        $sql = "SELECT zwm.roomcd,fv.custid,fv.custname,DATEDIFF(DAY,CAST(fv.birthday AS DATE)," . SCH . ".GETJPDATE()) / 365 old,
+        $sql = "SELECT zwm.roomcd,fv.custid,fv.custname,DATEDIFF(DAY,CAST(fv.birthday AS DATE)," . $SCH . ".GETJPDATE()) / 365 old,
                 fv.sex,vz.actionid,vz.actionname,vz.actionclass,vz.actionorder,vz.actionexplain,vz.actionsummary,vz.color1,vz.displaycd1,
                 vz.deviceid1,vz.devicetype1,vz.dataexplain1,vz.displaycd2,vz.deviceid2,vz.devicetype2,vz.dataexplain2,cmd1.value displayname1,
                 cmd2.value displayname2,cmt1.value devicetypename1,cmt2.value devicetypename2,vz.vzstartdt,vz.vzenddt FROM AZW001_frscview fv
@@ -48,7 +48,7 @@ if ($conn) {
                 vz.devicetype1,vz.dataexplain1,vz.displaycd2,vz.deviceid2,vz.devicetype2,vz.dataexplain2,cmd1.value,cmd2.value,cmt1.value,
                 cmt2.value,vz.vzstartdt,vz.vzenddt ORDER BY fv.facilitycd,fv.floorno,zwm.roomcd,fv.custid,vz.actionclass,vz.actionorder";
     } else {
-        $sql = "SELECT zwm.roomcd,fv.custid,fv.custname,DATEDIFF(DAY,CAST(fv.birthday AS DATE)," . SCH . ".GETJPDATE()) / 365 old,
+        $sql = "SELECT zwm.roomcd,fv.custid,fv.custname,DATEDIFF(DAY,CAST(fv.birthday AS DATE)," . $SCH . ".GETJPDATE()) / 365 old,
             fv.sex,vz.actionid,vz.actionname,vz.actionclass,vz.actionorder,vz.actionexplain,vz.actionsummary,vz.color1,vz.displaycd1,
             vz.deviceid1,vz.devicetype1,vz.dataexplain1,vz.displaycd2,vz.deviceid2,vz.devicetype2,vz.dataexplain2,
             cmd1.value displayname1,cmd2.value displayname2,cmt1.value devicetypename1,cmt2.value devicetypename2,vz.vzstartdt,vz.vzenddt
