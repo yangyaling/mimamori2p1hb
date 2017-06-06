@@ -16,7 +16,8 @@ include '../lib.php';
 
 $companyList = json_decode($_POST['companylist'], true);
 
-if ($conn && sqlsrv_begin_transaction($conn) && !is_empty($companyList)) {
+//if ($conn && sqlsrv_begin_transaction($conn) && !is_empty($companyList)) {
+if ($conn && !is_empty($companyList)) {
     foreach ($companyList as $data) {
         $cd = $data['cd'];
         $name = $data['name'];
@@ -55,13 +56,13 @@ if ($conn && sqlsrv_begin_transaction($conn) && !is_empty($companyList)) {
     $code = '500';
 }
 
-if ($code == '200') {
-    if (!sqlsrv_commit($conn)) {
-        sqlsrv_rollback($conn);
-    }
-} else {
-    sqlsrv_rollback($conn);
-}
+//if ($code == '200') {
+//    if (!sqlsrv_commit($conn)) {
+//        sqlsrv_rollback($conn);
+//    }
+//} else {
+//    sqlsrv_rollback($conn);
+//}
 
 sqlsrv_close($conn);
 

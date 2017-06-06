@@ -24,7 +24,8 @@ $floorNo = $_POST['floorno'];
 //$roomCd = '201号室';
 //$floorNo = 'B棟2';
 
-if ($conn && sqlsrv_begin_transaction($conn)) {
+//if ($conn && sqlsrv_begin_transaction($conn)) {
+if ($conn) {
     $customerName = '';
     $sql = "SELECT custname FROM AZW005_custmst WHERE custid='$customerId'";
     if ($row = sqlsrv_fetch_array(sqlsrv_query($conn, $sql))) {
@@ -101,13 +102,13 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
     $errors = sqlsrv_errors();
 }
 
-if ($code == '200') {
-    if (!sqlsrv_commit($conn)) {
-        sqlsrv_rollback($conn);
-    }
-} else {
-    sqlsrv_rollback($conn);
-}
+//if ($code == '200') {
+//    if (!sqlsrv_commit($conn)) {
+//        sqlsrv_rollback($conn);
+//    }
+//} else {
+//    sqlsrv_rollback($conn);
+//}
 
 sqlsrv_close($conn);
 

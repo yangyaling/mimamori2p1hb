@@ -34,7 +34,8 @@ $spList = json_decode($_POST['splist'], true);
 //    array("nodetype" => "1", "nodetypename" => "\u4eba\u611f", "devicetype" => "4", "devicetypename" => "\u4eba\u611f", "pattern" => 3, "time" => 1.5, "value" => 22, "rpoint" => "\u53cd\u5fdc\u306a\u3057")
 //);
 
-if ($conn && sqlsrv_begin_transaction($conn)) {
+//if ($conn && sqlsrv_begin_transaction($conn)) {
+if ($conn) {
     if (!is_empty($protoId) && !is_empty($spList)) {
         $sql = "DELETE FROM AZW006_scenarioprotomst WHERE protoid = '$protoId'";
         $result = sqlsrv_query($conn, $sql);
@@ -69,13 +70,13 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
     $code = '500';
 }
 
-if ($code == '200') {
-    if (!sqlsrv_commit($conn)) {
-        sqlsrv_rollback($conn);
-    }
-} else {
-    sqlsrv_rollback($conn);
-}
+//if ($code == '200') {
+//    if (!sqlsrv_commit($conn)) {
+//        sqlsrv_rollback($conn);
+//    }
+//} else {
+//    sqlsrv_rollback($conn);
+//}
 
 sqlsrv_close($conn);
 

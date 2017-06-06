@@ -90,7 +90,8 @@ function checkSerial($conn, $serial)
     return false;
 }
 
-if ($conn && sqlsrv_begin_transaction($conn)) {
+//if ($conn && sqlsrv_begin_transaction($conn)) {
+if ($conn) {
     if (!is_empty($ssList)) {
         $today = date('Y-m-d');
         foreach ($ssList as $data) {
@@ -248,13 +249,13 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
     $code = '500';
 }
 
-if ($code == '200') {
-    if (!sqlsrv_commit($conn)) {
-        sqlsrv_rollback($conn);
-    }
-} else {
-    sqlsrv_rollback($conn);
-}
+//if ($code == '200') {
+//    if (!sqlsrv_commit($conn)) {
+//        sqlsrv_rollback($conn);
+//    }
+//} else {
+//    sqlsrv_rollback($conn);
+//}
 
 sqlsrv_close($conn);
 

@@ -28,7 +28,8 @@ $mainNodeName = $_POST['mainnodename'];
 //$floorNo = 'B棟1';
 //$placeList = json_decode('[{"displayname" : "クローゼット6","startdate" : "2017-06-06","roomid" : "601号室","nodeid" : "2172","oldmemo" : "トイレ内","nodetype" : "1","memo" : "クロ","serial" : "32303136303632323030303030343033","oldplace" : "2","olddisplaycd" : "05","gatewayid" : "368","placename" : "外","olddisplayname" : "トイレ5","nodename" : "0902","oldplacename" : "内","mainnodeid" : "0901","initflag" : 1,"place" : "1","displaycd" : "06"},{"displayname" : "寝室3","startdate" : "2017-06-06","roomid" : "601号室","nodeid" : "2173","oldmemo" : "寝室内","nodetype" : "1","memo" : "寝室内","serial" : "32303136303632323030303030343032","oldplace" : "2","olddisplaycd" : "03","gatewayid" : "368","placename" : "内","olddisplayname" : "寝室3","nodename" : "0901","oldplacename" : "内","mainnodeid" : "0901","initflag" : 1,"place" : "2","displaycd" : "03"}]', true);
 
-if ($conn && sqlsrv_begin_transaction($conn)) {
+//if ($conn && sqlsrv_begin_transaction($conn)) {
+if ($conn) {
     if (!is_empty($placeList)) {
         $insertItemMsg = '';
         $updateItemMsg = '';
@@ -244,13 +245,13 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
     $errors = sqlsrv_errors();
 }
 
-if ($code == '200') {
-    if (!sqlsrv_commit($conn)) {
-        sqlsrv_rollback($conn);
-    }
-} else {
-    sqlsrv_rollback($conn);
-}
+//if ($code == '200') {
+//    if (!sqlsrv_commit($conn)) {
+//        sqlsrv_rollback($conn);
+//    }
+//} else {
+//    sqlsrv_rollback($conn);
+//}
 
 sqlsrv_close($conn);
 

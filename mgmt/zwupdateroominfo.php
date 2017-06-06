@@ -17,7 +17,8 @@ include '../lib.php';
 $facilityCd = $_POST['facilitycd'];
 $roomList = json_decode($_POST['roomlist'], true);
 
-if ($conn && sqlsrv_begin_transaction($conn)) {
+//if ($conn && sqlsrv_begin_transaction($conn)) {
+if ($conn) {
     if (!is_empty($facilityCd) && !is_empty($roomList)) {
         foreach ($roomList as $data) {
             $roomCd = $data['roomcd'];
@@ -70,13 +71,13 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
     $errors = sqlsrv_errors();
 }
 
-if ($code == '200') {
-    if (!sqlsrv_commit($conn)) {
-        sqlsrv_rollback($conn);
-    }
-} else {
-    sqlsrv_rollback($conn);
-}
+//if ($code == '200') {
+//    if (!sqlsrv_commit($conn)) {
+//        sqlsrv_rollback($conn);
+//    }
+//} else {
+//    sqlsrv_rollback($conn);
+//}
 
 sqlsrv_close($conn);
 

@@ -96,7 +96,8 @@ function checkScenario($conn, $scenarioId, $scenarioName, $staffId, $customerId,
 
 $arrReturn['aaa'] = !is_empty($staffId) && !is_empty($customerId);
 
-if ($conn && sqlsrv_begin_transaction($conn) && !is_empty($staffId) && !is_empty($customerId)) {
+//if ($conn && sqlsrv_begin_transaction($conn) && !is_empty($staffId) && !is_empty($customerId)) {
+if ($conn && !is_empty($staffId) && !is_empty($customerId)) {
     //シナリオ採番
     if (is_empty($scenarioId)) {
         $sql = "SELECT staffid + custid + RIGHT('0000' + CAST(CAST(RIGHT('0000' + MAX(scenarioid),4) AS INT) + 1 AS
@@ -179,13 +180,13 @@ if ($code == '200') {
     $arrReturn['result'] = checkScenario($conn, $scenarioId, $scenarioName, $staffId, $customerId, $code, $errors);
 }
 
-if ($code == '200') {
-    if (!sqlsrv_commit($conn)) {
-        sqlsrv_rollback($conn);
-    }
-} else {
-    sqlsrv_rollback($conn);
-}
+//if ($code == '200') {
+//    if (!sqlsrv_commit($conn)) {
+//        sqlsrv_rollback($conn);
+//    }
+//} else {
+//    sqlsrv_rollback($conn);
+//}
 
 sqlsrv_close($conn);
 

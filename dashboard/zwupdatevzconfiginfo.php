@@ -328,7 +328,8 @@ function deleteVZConfig($conn, $customerId, $data, &$vzHistory, &$code, &$errors
     return true;
 }
 
-if ($conn && sqlsrv_begin_transaction($conn)) {
+//if ($conn && sqlsrv_begin_transaction($conn)) {
+if ($conn) {
     if (!is_empty($customerId) && !is_empty($actionInfoArr)) {
         $vzHistory = '';
         $today = date('Y-m-d 00:00:00');
@@ -391,13 +392,13 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
     $errors = sqlsrv_errors();
 }
 
-if ($code == '200') {
-    if (!sqlsrv_commit($conn)) {
-        sqlsrv_rollback($conn);
-    }
-} else {
-    sqlsrv_rollback($conn);
-}
+//if ($code == '200') {
+//    if (!sqlsrv_commit($conn)) {
+//        sqlsrv_rollback($conn);
+//    }
+//} else {
+//    sqlsrv_rollback($conn);
+//}
 
 sqlsrv_close($conn);
 

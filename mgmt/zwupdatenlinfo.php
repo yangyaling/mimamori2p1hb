@@ -16,7 +16,8 @@ include '../lib.php';
 
 $nlList = json_decode($_POST['nllist'], true);
 
-if ($conn && sqlsrv_begin_transaction($conn) && !is_empty($nlList)) {
+//if ($conn && sqlsrv_begin_transaction($conn) && !is_empty($nlList)) {
+if ($conn && !is_empty($nlList)) {
     foreach ($nlList as $data) {
         $cd = $data['cd'];
         $name = $data['name'];
@@ -55,13 +56,13 @@ if ($conn && sqlsrv_begin_transaction($conn) && !is_empty($nlList)) {
     $errors = sqlsrv_errors();
 }
 
-if ($code == '200') {
-    if (!sqlsrv_commit($conn)) {
-        sqlsrv_rollback($conn);
-    }
-} else {
-    sqlsrv_rollback($conn);
-}
+//if ($code == '200') {
+//    if (!sqlsrv_commit($conn)) {
+//        sqlsrv_rollback($conn);
+//    }
+//} else {
+//    sqlsrv_rollback($conn);
+//}
 
 sqlsrv_close($conn);
 

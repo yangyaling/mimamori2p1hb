@@ -34,7 +34,8 @@ $staffList = json_decode($_POST['stafflist'], true);
 //$arrReturn['facilitycdresult'] = $facilityCd;
 //$arrReturn['stafflistresult'] = $staffList;
 
-if ($conn && sqlsrv_begin_transaction($conn) && !is_empty($staffList)) {
+//if ($conn && sqlsrv_begin_transaction($conn) && !is_empty($staffList)) {
+if ($conn && !is_empty($staffList)) {
     foreach ($staffList as $data) {
         $staffId = $data['staffid'];
         $nickname = $data['nickname'];
@@ -93,13 +94,13 @@ if ($conn && sqlsrv_begin_transaction($conn) && !is_empty($staffList)) {
     $errors = sqlsrv_errors();
 }
 
-if ($code == '200') {
-    if (!sqlsrv_commit($conn)) {
-        sqlsrv_rollback($conn);
-    }
-} else {
-    sqlsrv_rollback($conn);
-}
+//if ($code == '200') {
+//    if (!sqlsrv_commit($conn)) {
+//        sqlsrv_rollback($conn);
+//    }
+//} else {
+//    sqlsrv_rollback($conn);
+//}
 
 sqlsrv_close($conn);
 
