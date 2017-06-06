@@ -52,6 +52,7 @@ if ($conn && sqlsrv_begin_transaction($conn) && !is_empty($nlList)) {
     }
 } else {
     $code = '500';
+    $errors = array('param is error.');
 }
 
 if ($code == '200') {
