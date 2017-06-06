@@ -95,7 +95,7 @@ function getDailyLrList($conn, $userId0, $wDay, $actionList)
             ROW_NUMBER()OVER(PARTITION BY v.actionid,v.vzstartdt,v.actionclass ORDER BY a.dt) rn,CASE v.actionexplain
             WHEN '1' THEN CASE WHEN a.value = 255 THEN 1 ELSE NULL END WHEN '2' THEN CASE WHEN a.value = 0
             THEN 1 ELSE NULL END WHEN '3' THEN CASE WHEN a.value = 255 OR a.value = 0 THEN 1 ELSE NULL END
-            WHEN '4' THEN CASE WHEN a.value = 100 THEN 1 ELSE 0 END WHEN '5' THEN a.value WHEN '6' THEN
+            WHEN '4' THEN CASE WHEN a.value = 100 THEN 1 ELSE 0 END WHEN '5' THEN CASE WHEN v.actionclass = 1 THEN ISNULL(a.value,0) ELSE a.value  END WHEN '6' THEN
             CASE WHEN a.value = 255 AND (SELECT a2.value FROM AZW151_actiondataview a2 WITH(NOLOCK) WHERE
             a2.deviceid = v.deviceid2 AND a2.dataexplain = v.dataexplain2 AND a2.dt = a.dt) = 100 THEN 1 ELSE NULL END END value/*,a.deviceid,a.dt*/
             FROM AZW150_vzconfig v WITH(NOLOCK) INNER JOIN AZW151_actiondataview a WITH(NOLOCK)

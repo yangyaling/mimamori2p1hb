@@ -25,12 +25,14 @@ function getSumColorList($conn, $userId0, $sd, $ed)
 {
     $actionIdList = array();
 
-    $sql = "SELECT DISTINCT vz.actionid + '|' + vz.actionclass + '|' + vz.vzstartdt actionid,vz.actionname,vz.actionexplain,
-            vz.color1 actioncolor,vz.actionclass,SUBSTRING(vz.vzstartdt,6,5) vzstartdt,SUBSTRING(vz.vzenddt,6,5) vzenddt
+    $sql = "SELECT t.actionid,t.actionname,t.actionexplain,t.actioncolor,t.actionclass,t.vzstartdt,t.vzenddt FROM (
+            SELECT DISTINCT vz.actionid + '|' + vz.actionclass + '|' + vz.vzstartdt actionid,vz.actionorder,vz.actionname,vz.actionexplain,
+            vz.color1 actioncolor,vz.actionclass,vz.vzstartdt vzorder,SUBSTRING(vz.vzstartdt,6,5) vzstartdt,SUBSTRING(vz.vzenddt,6,5) vzenddt
             FROM (SELECT CONVERT(VARCHAR(10),DATEADD(DAY,v.number*1,CAST('$sd 00:00:00' AS DATE)),120) dst
             FROM AZW111_values v WHERE v.type='S' AND v.number < DATEDIFF(DD,'$sd 00:00:00','$ed 00:00:00')) ds
             LEFT OUTER JOIN AZW150_vzconfig vz WITH(NOLOCK) ON vz.userid = '$userId0' AND vz.vzstartdt <= ds.dst + ' 00:00:00'
-            AND (vz.vzenddt IS NULL OR vz.vzenddt >= ds.dst + ' 00:00:00') WHERE userid IS NOT NULL";
+            AND (vz.vzenddt IS NULL OR vz.vzenddt >= ds.dst + ' 00:00:00') WHERE userid IS NOT NULL) t
+            ORDER BY t.actionclass,t.actionorder,t.vzorder,t.actionid";
 
     if ($result = sqlsrv_query($conn, $sql)) {
         $index1 = 0;
@@ -70,15 +72,15 @@ function getColorList($conn, $userId0, $baseDate, $forWeekly, $subDays)
     $today = $baseDate . ' 00:00:00';
 
     if ($forWeekly == '1') {
-        $sql = "SELECT actionid + '|' + actionclass + '|' + vzstartdt actionid,actionname,actionexplain,color1 actioncolor,actionclass,SUBSTRING(vzstartdt,6,5) vzstartdt,SUBSTRING(vzenddt,6,5) vzenddt
+        $sql = "SELECT actionid + '|' + actionclass + '|' + vzstartdt actionid,actionname,actionexplain,color1 actioncolor,actionclass,SUBSTRING(vzstartdt,6,5) vzstartdt,SUBSTRING(vzenddt,6,5) vzenddt,vzstartdt vzorder
                 FROM AZW150_vzconfig
                 WHERE userid = '$userId0' AND vzstartdt <= '$today' AND (vzenddt IS NULL OR DATEDIFF(DAY,vzenddt,'$today') < $subDays)
-                ORDER BY actionclass,actionorder,actionid";
+                ORDER BY actionclass,actionorder,vzorder,actionid";
     } else {
-        $sql = "SELECT actionid + '|' + actionclass + '|' + vzstartdt actionid,actionname,actionexplain,color1 actioncolor,actionclass,SUBSTRING(vzstartdt,6,5) vzstartdt,SUBSTRING(vzenddt,6,5) vzenddt
+        $sql = "SELECT actionid + '|' + actionclass + '|' + vzstartdt actionid,actionname,actionexplain,color1 actioncolor,actionclass,SUBSTRING(vzstartdt,6,5) vzstartdt,SUBSTRING(vzenddt,6,5) vzenddt,vzstartdt vzorder
                 FROM AZW150_vzconfig
                 WHERE userid = '$userId0' AND vzstartdt <= '$today' AND (vzenddt IS NULL OR vzenddt >= '$today')
-                ORDER BY actionclass,actionorder,actionid";
+                ORDER BY actionclass,actionorder,vzorder,actionid";
     }
 
     if ($result = sqlsrv_query($conn, $sql)) {
