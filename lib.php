@@ -120,31 +120,4 @@ function getBaseInfo($conn, $facilityCd)
     return $baseInfo;
 }
 
-$SCH = $_POST['hostcd'];
-$UID = $SCH;
-
-$arrReturn = array();
-$code = '200';
-$errors = array();
-
-$connectionOptions = array('Database' => DATABASE, 'Uid' => $UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
-$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
-
-if ($conn) {
-    $sql = "SELECT  1 FROM AZW002_hostmst hm WHERE hm.hostcd='$UID'";
-
-    if ($result = sqlsrv_query($conn, $sql)) {
-        if (!sqlsrv_has_rows($result)) {
-            $code = '302';
-            $errors = array('ホストが存在しません');
-        }
-    } else {
-        $code = '301';
-        $errors = sqlsrv_errors();
-    }
-} else {
-    $code = '300';
-    $errors = sqlsrv_errors();
-}
-
 ?>
