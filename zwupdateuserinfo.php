@@ -14,7 +14,7 @@ include 'lib.php';
 //$arrReturn['code'] = '200';
 
 $staffId = $_POST['staffid'];
-$nickname = $_POST['nickname'];
+$nickname = $_POST['username'];
 $groupId = $_POST['groupid'];
 $email = $_POST['email'];
 $updateDate = $_POST['updatedate'];
@@ -26,7 +26,7 @@ if ($conn) {
 
     //検索結果がある場合、更新処理を行う。
     if (sqlsrv_has_rows($result)) {
-        $sql = "UPDATE AZW004_staffmst SET nickname='$nickname',groupid='$groupId',email='$email',updatedate='$updateDate' WHERE staffid='$staffId'";
+        $sql = "UPDATE AZW004_staffmst SET staffname='$nickname',groupid='$groupId',email='$email',updatedate='$updateDate' WHERE staffid='$staffId'";
 
         $result = sqlsrv_query($conn, $sql);
         if (!$result) {

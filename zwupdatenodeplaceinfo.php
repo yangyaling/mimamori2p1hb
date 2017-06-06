@@ -22,10 +22,17 @@ $placeList = json_decode($_POST['place'], true);
 $mainNodeId = $_POST['mainnodeid'];
 $mainNodeName = $_POST['mainnodename'];
 
+//$staffId = 'sw00001';
+//$facilityCd = '0001';
+//$customerId = '00014';
+//$floorNo = 'B棟1';
+//$placeList = json_decode('[{"displayname" : "クローゼット6","startdate" : "2017-06-06","roomid" : "601号室","nodeid" : "2172","oldmemo" : "トイレ内","nodetype" : "1","memo" : "クロ","serial" : "32303136303632323030303030343033","oldplace" : "2","olddisplaycd" : "05","gatewayid" : "368","placename" : "外","olddisplayname" : "トイレ5","nodename" : "0902","oldplacename" : "内","mainnodeid" : "0901","initflag" : 1,"place" : "1","displaycd" : "06"},{"displayname" : "寝室3","startdate" : "2017-06-06","roomid" : "601号室","nodeid" : "2173","oldmemo" : "寝室内","nodetype" : "1","memo" : "寝室内","serial" : "32303136303632323030303030343032","oldplace" : "2","olddisplaycd" : "03","gatewayid" : "368","placename" : "内","olddisplayname" : "寝室3","nodename" : "0901","oldplacename" : "内","mainnodeid" : "0901","initflag" : 1,"place" : "2","displaycd" : "03"}]', true);
+
 if ($conn && sqlsrv_begin_transaction($conn)) {
     if (!is_empty($placeList)) {
         $insertItemMsg = '';
         $updateItemMsg = '';
+        $today = date('Y-m-d');
         foreach ($placeList as $data) {
             $nodeId = $data['nodeid'];
             $sensorId = $data['nodename'];
@@ -44,7 +51,6 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
             $initFlag = $data['initflag'];
 
             if ($initFlag == 1) {
-                $itemSql = '';
                 $hasMsg = false;
 
                 if (!is_empty($displayCd) && $displayCd != $oldDisplayCd) {
@@ -63,38 +69,66 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
                             AND sensorid='$sensorId' AND startdate='$startDate'";
                     $result = sqlsrv_query($conn, $sql);
                     if (sqlsrv_has_rows($result)) {
-                        $sql = "UPDATE AZW009_serialrelation SET enddate=CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120)
-                                WHERE serial='$serial' AND custid='$customerId' AND sensorid='$sensorId' AND startdate='$startDate'";
+                        if (strtotime($today) == strtotime($startDate)) {
+                            $itemSql = '';
 
-                        $result = sqlsrv_query($conn, $sql);
-                        if (!$result) {
-                            $code = '504';
-                            $errors = sqlsrv_errors();
-                            break;
+                            if (!is_empty($displayCd) && $displayCd != $oldDisplayCd) {
+                                $itemSql .= ",displayname='$displayCd'";
+                            }
+
+                            if (!is_empty($place) && $place != $oldPlace) {
+                                $itemSql .= ",place='$place'";
+                            }
+
+                            if ($memo != $oldMemo) {
+                                $itemSql .= ",memo='$memo'";
+                            }
+
+                            if (!is_empty($itemSql)) {
+                                $sql = "UPDATE AZW009_serialrelation SET " . substr($itemSql, 1) . "
+                                        WHERE serial='$serial' AND custid='$customerId' AND sensorid='$sensorId' AND startdate='$startDate'";
+
+                                $result = sqlsrv_query($conn, $sql);
+                                if (!$result) {
+                                    $code = '507';
+                                    $errors = sqlsrv_errors();
+                                    break;
+                                }
+                            }
+                        } else {
+                            $sql = "UPDATE AZW009_serialrelation SET enddate=CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE()-1,120)
+                                    WHERE serial='$serial' AND custid='$customerId' AND sensorid='$sensorId' AND startdate='$startDate'";
+
+                            $result = sqlsrv_query($conn, $sql);
+                            if (!$result) {
+                                $code = '504';
+                                $errors = sqlsrv_errors();
+                                break;
+                            }
+                            if (!is_empty($serial) && !is_empty($customerId) && !is_empty($sensorId)) {
+                                $sql = "INSERT INTO AZW009_serialrelation(serial,sensorid,facilitycd,custid,displayname,place,memo,startdate,initflag)
+                                        VALUES('$serial','$sensorId','$facilityCd','$customerId','$displayCd','$place','$memo',CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120),1)";
+
+                                $result = sqlsrv_query($conn, $sql);
+                                if (!$result) {
+                                    $code = '502';
+                                    $errors = sqlsrv_errors();
+                                    break;
+                                }
+                            } else {
+                                $code = '605';
+                                $errors = array('parament is empty.');
+                                break;
+                            }
                         }
                     } else {
                         $code = '503';
                         $errors = array('db\'s data is not exists..', $sql);
                         break;
                     }
-                    if (!is_empty($serial) && !is_empty($customerId) && !is_empty($sensorId)) {
-                        $sql = "INSERT INTO AZW009_serialrelation(serial,sensorid,facilitycd,custid,displayname,place,memo,startdate,initflag)
-                        VALUES('$serial','$sensorId','$facilityCd','$customerId','$displayCd','$place','$memo',CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE()+1,120),1)";
-
-                        $result = sqlsrv_query($conn, $sql);
-                        if (!$result) {
-                            $code = '502';
-                            $errors = sqlsrv_errors();
-                            break;
-                        }
-                    } else {
-                        $code = '605';
-                        $errors = array('parament is empty.');
-                        break;
-                    }
                 } else if ($memo != $oldMemo) {
                     $sql = "SELECT 1 FROM AZW009_serialrelation WHERE serial='$serial' AND custid='$customerId'
-                    AND sensorid='$sensorId' AND startdate='$startDate'";
+                            AND sensorid='$sensorId' AND startdate='$startDate'";
                     $result = sqlsrv_query($conn, $sql);
                     if (sqlsrv_has_rows($result)) {
                         $sql = "UPDATE AZW009_serialrelation SET memo='$memo' WHERE serial='$serial' AND custid='$customerId'

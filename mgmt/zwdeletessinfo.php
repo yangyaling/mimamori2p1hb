@@ -55,7 +55,7 @@ if ($conn) {
     if ($row = sqlsrv_fetch_array(sqlsrv_query($conn, $sql))) {
         $displayName = $row[0];
         $placeName = $row[1];
-        $sql = "UPDATE AZW009_serialrelation SET enddate=CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120)
+        $sql = "UPDATE AZW009_serialrelation SET enddate=CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE()-1,120)
                 WHERE serial='$oldSerial' $whereSql AND sensorid='$oldSensorId' AND startdate='$startDate'";
 
         $result = sqlsrv_query($conn, $sql);

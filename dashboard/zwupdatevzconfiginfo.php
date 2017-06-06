@@ -90,7 +90,6 @@ function checkData($data, &$code, &$errors)
 
 function createVZConfig($conn, $customerId, $data, $today, $hasHistory, &$vzHistory, &$code, &$errors)
 {
-    global $SCH;
     $actionId = $data['actionid'];
     $actionName = $data['actionname'];
     $actionClass = $data['actionclass'];
@@ -117,10 +116,8 @@ function createVZConfig($conn, $customerId, $data, $today, $hasHistory, &$vzHist
         if (!sqlsrv_has_rows($result) || !$hasHistory) {
             if ($hasHistory) {
                 $newActionId = getActionId($conn, $customerId, $actionClass);
-                $today = "'" . $today . "'";
             } else {
                 $newActionId = $actionId;
-                $today = "CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE()+1,120)+' 00:00:00'";
             }
             if (is_empty($deviceId1 = getDeviceIdByDisplayCdWithDeviceType($conn, $customerId, $displayCd1, $deviceType1, $code, $errors))) {
                 return false;
@@ -134,14 +131,14 @@ function createVZConfig($conn, $customerId, $data, $today, $hasHistory, &$vzHist
                     (userid,actionid,vzstartdt,actionclass,actionname,actionorder,actionexplain,actionsummary,
                     displaycd1,deviceid1,devicetype1,dataexplain1,color1,
                     displaycd2,deviceid2,devicetype2,dataexplain2) VALUES
-                    ('$customerId','$newActionId',$today,'$actionClass','$actionName','$actionOrder','$actionExplain','$actionSummary',
+                    ('$customerId','$newActionId','$today','$actionClass','$actionName','$actionOrder','$actionExplain','$actionSummary',
                     '$displayCd1','$deviceId1','$deviceType1','$dataExplain1','$actionColor',
                     '$displayCd2','$deviceId2','$deviceType2','$dataExplain2')";
             } else {
                 $sql = "INSERT INTO AZW150_vzconfig
                     (userid,actionid,vzstartdt,actionclass,actionname,actionorder,actionexplain,actionsummary,
                     displaycd1,deviceid1,devicetype1,dataexplain1,color1) VALUES
-                    ('$customerId','$newActionId',$today,'$actionClass','$actionName','$actionOrder','$actionExplain','$actionSummary',
+                    ('$customerId','$newActionId','$today','$actionClass','$actionName','$actionOrder','$actionExplain','$actionSummary',
                     '$displayCd1','$deviceId1','$deviceType1','$dataExplain1','$actionColor')";
             }
 
@@ -169,6 +166,7 @@ function createVZConfig($conn, $customerId, $data, $today, $hasHistory, &$vzHist
 
 function updateVZConfig($conn, $customerId, $data, $today, &$vzHistory, &$code, &$errors)
 {
+    global $SCH;
     $actionId = $data['actionid'];
     $oldActionName = $data['oldactionname'];
     $actionName = $data['actionname'];
@@ -261,12 +259,11 @@ function updateVZConfig($conn, $customerId, $data, $today, &$vzHistory, &$code, 
     if ($changeFlag) {
         $sql = "SELECT vzstartdt FROM AZW150_vzconfig WHERE userid='$customerId' AND actionid='$actionId'
                 AND actionclass='$actionClass' AND vzenddt IS NULL";
-        // AND vzstartdt <= '$today'
 
         if ($result = sqlsrv_query($conn, $sql)) {
             if ($row = sqlsrv_fetch_array($result)) {
                 $vzStartDt = $row[0];
-                if (strtotime($today) < strtotime($vzStartDt)) {
+                if (strtotime($today) == strtotime($vzStartDt)) {
                     $sql = "UPDATE AZW150_vzconfig SET " . substr($itemSql, 1) . " WHERE userid='$customerId' AND actionid='$actionId'
                             AND actionclass='$actionClass' AND vzstartdt = '$vzStartDt'";
 
@@ -276,8 +273,8 @@ function updateVZConfig($conn, $customerId, $data, $today, &$vzHistory, &$code, 
                         return false;
                     }
                 } else {
-                    $sql = "UPDATE AZW150_vzconfig SET vzenddt = '$today' WHERE userid='$customerId' AND actionid='$actionId'
-                            AND actionclass='$actionClass' AND vzstartdt <= '$today' AND vzenddt IS NULL";
+                    $sql = "UPDATE AZW150_vzconfig SET vzenddt=CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE()-1,120)+' 00:00:00'
+                            WHERE userid='$customerId' AND actionid='$actionId' AND actionclass='$actionClass' AND vzstartdt='$vzStartDt'";
 
                     if (!$result = sqlsrv_query($conn, $sql)) {
                         $code = '511';
@@ -300,8 +297,9 @@ function updateVZConfig($conn, $customerId, $data, $today, &$vzHistory, &$code, 
     return true;
 }
 
-function deleteVZConfig($conn, $customerId, $data, $today, &$vzHistory, &$code, &$errors)
+function deleteVZConfig($conn, $customerId, $data, &$vzHistory, &$code, &$errors)
 {
+    global $SCH;
     $actionId = $data['actionid'];
     $oldActionName = $data['oldactionname'];
     $actionClass = $data['actionclass'];
@@ -311,7 +309,8 @@ function deleteVZConfig($conn, $customerId, $data, $today, &$vzHistory, &$code, 
                 AND actionclass='$actionClass' AND vzstartdt='$vzStartDt'";
 
     if (sqlsrv_has_rows(sqlsrv_query($conn, $sql))) {
-        $sql = "UPDATE AZW150_vzconfig SET vzenddt = '$today' WHERE userid='$customerId' AND actionid='$actionId'
+        $sql = "UPDATE AZW150_vzconfig SET vzenddt = CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE()-1,120)+' 00:00:00'
+                WHERE userid='$customerId' AND actionid='$actionId'
                 AND actionclass='$actionClass' AND vzstartdt='$vzStartDt'";
 
         if (!$result = sqlsrv_query($conn, $sql)) {
@@ -365,7 +364,7 @@ if ($conn && sqlsrv_begin_transaction($conn)) {
                     }
                 }
             } elseif ($oFlag == 'D') {
-                if (!deleteVZConfig($conn, $customerId, $data, $today, $vzHistory, $code, $errors)) {
+                if (!deleteVZConfig($conn, $customerId, $data, $vzHistory, $code, $errors)) {
                     break;
                 }
             }
