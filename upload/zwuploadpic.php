@@ -16,6 +16,7 @@ include '../lib.php';
 //$code = '200';
 //$errors = array();
 
+$hostCd = $_POST['hostcd'];
 $customerId = $_POST['custid'];
 $updateDate = $_POST['updatedate'];
 $picData = $_POST['picdata'];
@@ -51,8 +52,8 @@ if ($conn) {
         */
         $fileName = $customerId . $suffix;
 
-//        $picPath = 'http://mimamori2p1hb.azurewebsites.net/upload/' . $fileName;
-        $picPath = 'http://' . $_SERVER ['HTTP_HOST'].'/upload/' . $fileName;
+//        $picPath = 'http://mimamori2p1hb.azurewebsites.net/upload/' . $hostCd . '_' . $fileName;
+        $picPath = 'http://' . $_SERVER ['HTTP_HOST'] . '/upload/' . $hostCd . '_' . $fileName;
         updatePicInfo($conn, $customerId, $picPath, $updateDate, $code);
         if ($code == '200') {
 //        $fileSize = file_put_contents($fileName, $picData);
