@@ -43,7 +43,7 @@ function getSumColorList($conn, $userId0, $sd, $ed)
             if ($row[4] == '1') {
                 $actionIdList[0][$index1] = array(
                     'actionid' => $row[0],
-                    'actionname' => (!is_empty($row[6])) ? $row[1] . '(' . $row[5] . ' - ' . $row[6] . ')' : $row[1] . '(' . $row[5] . ')',
+                    'actionname' => (!is_empty($row[6])) ? $row[1] . '(' . $row[5] . ' ~ ' . $row[6] . ')' : $row[1] . '(' . $row[5] . ')',
                     'actionexplain' => $row[2],
                     'actioncolor' => $row[3],
                     'data' => array()
@@ -52,7 +52,7 @@ function getSumColorList($conn, $userId0, $sd, $ed)
             } else if ($row[4] == '2') {
                 $actionIdList[1][$index2] = array(
                     'actionid' => $row[0],
-                    'actionname' => (!is_empty($row[6])) ? $row[1] . '(' . $row[5] . ' - ' . $row[6] . ')' : $row[1] . '(' . $row[5] . ')',
+                    'actionname' => (!is_empty($row[6])) ? $row[1] . '(' . $row[5] . ' ~ ' . $row[6] . ')' : $row[1] . '(' . $row[5] . ')',
                     'actionexplain' => $row[2],
                     'actioncolor' => $row[3],
                     'data' => array()
