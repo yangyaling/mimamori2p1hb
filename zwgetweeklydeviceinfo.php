@@ -81,92 +81,6 @@ function getWeeksArray($nowDate, &$sd)
     return $weeksArr;
 }
 
-///*
-// * 今週の日付配列を取得
-// */
-//function getThisWeekDateArray($conn, $arrCnt, $baseDate, $deviceId, $subDays)
-//{
-//    $dateArray = array();
-//    $index = 0;
-//    for ($x = 0; $x < $subDays; $x++) {
-//        $dateArray[$index] = getMainValues($conn, '', $baseDate, $deviceId);
-//
-//        $y = substr($baseDate, 0, 4);
-//        $m = substr($baseDate, 5, 2);
-//        $d = substr($baseDate, 8, 2);
-//
-//        $conDate = date('Y-m-d', strtotime('+1 day', strtotime(date('Y-m-d', mktime(0, 0, 0, $m, $d, $y)))));
-//        $baseDate = $conDate;
-//        $index = $index + 1;
-//    }
-//
-//    $dateArray[$index] = getMainValues($conn, $arrCnt, $baseDate, $deviceId);
-//
-//    return $dateArray;
-//}
-//
-///*
-// * 今週以外の日付配列を取得
-// */
-//function getOldWeekDateArray($conn, $arrCnt, $baseDate, $deviceId)
-//{
-//    $dateArray = array();
-//    $index = 0;
-//    for ($x = 0; $x < 6; $x++) {
-//        $dateArray[$index] = getMainValues($conn, '', $baseDate, $deviceId);
-//
-//        $y = substr($baseDate, 0, 4);
-//        $m = substr($baseDate, 5, 2);
-//        $d = substr($baseDate, 8, 2);
-//
-//        $conDate = date('Y-m-d', strtotime('+1 day', strtotime(date('Y-m-d', mktime(0, 0, 0, $m, $d, $y)))));
-//        $baseDate = $conDate;
-//        $index = $index + 1;
-//    }
-//
-//    $dateArray[$index] = getMainValues($conn, $arrCnt, $baseDate, $deviceId);
-//
-//    return $dateArray;
-//}
-
-///*
-// * 週毎の日付配列を取得
-// */
-//function getWeeklyDateArray($conn, $arrCnt, $nowDate, $deviceId)
-//{
-//    $weeklyDateArray = array();
-//
-//    // ４週のデータを取得する。
-//    $weeksArr = getWeeksArray($nowDate);
-//
-//    $index = 0;
-//    foreach ($weeksArr as $weekValue) {
-//        if ($weekValue['label'] == '今週') {
-//            $nowDate = $weekValue['basedate'];
-//            $x = date("w", strtotime($nowDate));
-//            if ($x == 0) {
-//                $subDays = 6;
-//            } else {
-//                $subDays = ($x % 7 - 1);
-//            }
-//            $conDate = date('Y-m-d', strtotime('-' . $subDays . ' day', strtotime($nowDate)));
-//            $weeklyDateArray[$index] = array(array(
-//                'label' => $weekValue['label'],
-//                'devicevalues' => getThisWeekDateArray($conn, $arrCnt, $conDate, $deviceId, $subDays)
-//            ));
-//        } else {
-//            $conDate = date('Y-m-d', strtotime('-6 day', strtotime($weekValue['basedate'])));
-//            $weeklyDateArray[$index] = array(array(
-//                'label' => $weekValue['label'],
-//                'devicevalues' => getOldWeekDateArray($conn, '', $conDate, $deviceId)
-//            ));
-//        }
-//        $index = $index + 1;
-//    }
-//
-//    return $weeklyDateArray;
-//}
-
 /*
  * 今週の日付配列を取得
  */
@@ -225,7 +139,7 @@ function getThisWeekDateArray2($conn, $arrCnt, $baseDate, $subDays, $staffId, $c
         $bs = '';
 
         while ($row = sqlsrv_fetch_array($result)) {
-            if (!is_empty($nodeId) && $nodeId != $row[1]) {
+            if (!is_empty($nodeId) && !is_empty($displayName) && ($nodeId != $row[1] || $displayName != $row[9])) {
                 $deviceInfoList[$index2] = array(array(
                     'nodeid' => $nodeId,
                     'nodename' => $nodeName,
@@ -295,23 +209,6 @@ function getThisWeekDateArray2($conn, $arrCnt, $baseDate, $subDays, $staffId, $c
     }
 
     return $weekValues;
-//    $dateArray = array();
-//    $index = 0;
-//    for ($x = 0; $x < $subDays; $x++) {
-//        $dateArray[$index] = getMainValues($conn, '', $baseDate, '$deviceId');
-//
-//        $y = substr($baseDate, 0, 4);
-//        $m = substr($baseDate, 5, 2);
-//        $d = substr($baseDate, 8, 2);
-//
-//        $conDate = date('Y-m-d', strtotime('+1 day', strtotime(date('Y-m-d', mktime(0, 0, 0, $m, $d, $y)))));
-//        $baseDate = $conDate;
-//        $index = $index + 1;
-//    }
-//
-//    $dateArray[$index] = getMainValues($conn, $arrCnt, $baseDate, '$deviceId');
-//
-//    return $dateArray;
 }
 
 /*
@@ -371,7 +268,7 @@ function getOldWeekDateArray2($conn, $arrCnt, $baseDate, $staffId, $customerId, 
         $bs = '';
 
         while ($row = sqlsrv_fetch_array($result)) {
-            if (!is_empty($nodeId) && $nodeId != $row[1]) {
+            if (!is_empty($nodeId) && !is_empty($displayName) && ($nodeId != $row[1] || $displayName != $row[9])) {
                 $deviceInfoList[$index2] = array(array(
                     'nodeid' => $nodeId,
                     'nodename' => $nodeName,
@@ -435,22 +332,6 @@ function getOldWeekDateArray2($conn, $arrCnt, $baseDate, $staffId, $customerId, 
         }
         $weekValues['deviceinfo'] = $deviceInfoList;
     }
-///////////////////////////////////////////////////////
-//    $dateArray = array();
-//    $index = 0;
-//    for ($x = 0; $x < 6; $x++) {
-//        $dateArray[$index] = getMainValues($conn, '', $baseDate, $deviceId);
-//
-//        $y = substr($baseDate, 0, 4);
-//        $m = substr($baseDate, 5, 2);
-//        $d = substr($baseDate, 8, 2);
-//
-//        $conDate = date('Y-m-d', strtotime('+1 day', strtotime(date('Y-m-d', mktime(0, 0, 0, $m, $d, $y)))));
-//        $baseDate = $conDate;
-//        $index = $index + 1;
-//    }
-//
-//    $dateArray[$index] = getMainValues($conn, $arrCnt, $baseDate, $deviceId);
 
     return $weekValues;
 }

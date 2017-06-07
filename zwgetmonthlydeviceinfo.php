@@ -72,67 +72,6 @@ function getDays($conn, $baseDate)
     return $days;
 }
 
-///*
-// *月毎デバイスデータ取得
-// */
-//function getMonthValues($conn, $arrCnt, $conDate, $deviceId)
-//{
-//    $monthValues = array();
-//
-//    $sql = "SELECT COUNT(zd.value) value FROM (SELECT CONVERT(VARCHAR(10),DATEADD(dd,number,'$conDate'),120) AS dt
-//            FROM AZW111_values WHERE type='S' AND DATEADD(dd,number,'$conDate')<=DATEADD(dd,-1,CONVERT(VARCHAR(8),
-//            DATEADD(mm,1,'$conDate'),120)+'01')) zdt LEFT OUTER JOIN AZW133_zworksdata zd ON zd.deviceid = '$deviceId'
-//            AND zd.value = '255' AND zd.date = zdt.dt GROUP BY zdt.dt ORDER BY zdt.dt";
-//
-//    $result = sqlsrv_query($conn, $sql);
-//    if ($result) {
-//        $index = 0;
-//        while ($row = sqlsrv_fetch_array($result)) {
-//            if ($arrCnt == '' || $index <= $arrCnt) {
-//                $monthValues[$index] = $row[0];
-//            }
-//            $index = $index + 1;
-//        }
-//    } else {
-//        global $code;
-//        $code = '502';
-//    }
-//
-//    return $monthValues;
-//}
-
-///*
-// * 月毎の日付配列を取得
-// */
-//function getMonthlyDateArray($conn, $arrCnt, $nowDate, $deviceId)
-//{
-//    $monthlyDateArray = array();
-//
-//    // 3月のデータを取得する。
-//    $monthsArr = getMonthsArray($nowDate);
-//
-//    $index = 0;
-//    foreach ($monthsArr as $monthValue) {
-//        $baseDate = $monthValue['basedate'];
-//        if ($monthValue['label'] == '今月') {
-//            $monthlyDateArray[$index] = array(array(
-//                'label' => $monthValue['label'],
-//                'datestring' => $baseDate,
-//                'devicevalues' => getMonthValues($conn, $arrCnt, $baseDate, $deviceId)
-//            ));
-//        } else {
-//            $monthlyDateArray[$index] = array(array(
-//                'label' => $monthValue['label'],
-//                'datestring' => $baseDate,
-//                'devicevalues' => getMonthValues($conn, '', $baseDate, $deviceId)
-//            ));
-//        }
-//        $index = $index + 1;
-//    }
-//
-//    return $monthlyDateArray;
-//}
-
 function adjustValues($days, $deviceInfo, $arrCnt)
 {
     $di = array();
@@ -187,8 +126,8 @@ function getMonthValuesP1($conn, $arrCnt, $conDate, $staffId, $customerId, $days
             SELECT deviceid,value,timestmp,date dt,ROW_NUMBER() OVER(PARTITION BY deviceid ORDER BY timestmp DESC) ni
             FROM AZW138_zworkslastdata) zld ON zld.deviceid = zdm.deviceid AND zld.ni = 1
             $sqlBSWhere
-            GROUP BY zdt.dt,zdm.nodeid,zdm.deviceid,zd.date,zdm.nodename,zdm.displayname,zdm.devicename,zld.value,zdm.unit $sqlBSGroupBy
-            ORDER BY nodeid,zdt.dt";
+            GROUP BY zdt.dt,zdm.nodeid,zdm.deviceid,zd.date,zdm.nodename,zdm.displayname,zdm.devicename,zld.value,zdm.unit,zdm.nodeorder $sqlBSGroupBy
+            ORDER BY zdm.nodeorder,zdt.dt";
 
     if ($result = sqlsrv_query($conn, $sql)) {
         $index2 = 0;
@@ -206,7 +145,7 @@ function getMonthValuesP1($conn, $arrCnt, $conDate, $staffId, $customerId, $days
         $bs = '';
 
         while ($row = sqlsrv_fetch_array($result)) {
-            if (!is_empty($nodeId) && $nodeId != $row[1]) {
+            if (!is_empty($nodeId) && !is_empty($displayName) && ($nodeId != $row[1] || $displayName != $row[4])) {
                 $deviceInfo = adjustValues($days, $deviceInfo, $arrCnt);
                 $deviceInfoList[$index2] = array(array(
                     'nodeid' => $nodeId,
@@ -285,29 +224,6 @@ if ($conn) {
         }
         $index = $index + 1;
     }
-
-
-/////////////////////////////////////////////////////////////////////////
-
-//    $deviceInfo = getDeviceInfo($conn, $staffId, $customerId, '1');
-//
-//    $index = 0;
-//    foreach ($deviceInfo as $key => $value) {
-//        $arrReturn['deviceinfo'][$index] = array(
-//            'nodeid' => $value['nodeid'],
-//            'nodename' => $value['nodename'],
-//            'displayname' => $value['displayname'],
-//            'deviceid' => $value['deviceid'],
-//            'devicename' => $value['devicename'],
-//            'deviceunit' => $value['deviceunit'],
-//            'latestvalue' => $value['latestvalue'],
-//            'latestdate' => $value['latestdate'],
-//            'devicevalues' => getMonthlyDateArray($conn, intval($d), $nowDate, $value['deviceid']),
-//            'batterystatus' => getBatteryStatus($conn, $value['nodeid'], $baseDate)
-//        );
-//        $index = $index + 1;
-//    }
-
 } else {
     $code = '500';
 }
