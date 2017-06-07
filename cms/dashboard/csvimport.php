@@ -141,6 +141,7 @@ function getDeviceIdByDisplayCdWithDeviceType($conn, $customerId, $displayCd, $d
 
 function createVZConfig($conn, $customerId, $data, $today, $hasHistory, &$vzHistory, &$code, &$errors)
 {
+    global $SCH;
     $actionId = $data['actionid'];
     $actionName = $data['actionname'];
     $actionClass = $data['actionclass'];
@@ -156,7 +157,7 @@ function createVZConfig($conn, $customerId, $data, $today, $hasHistory, &$vzHist
     $deviceType2 = $data['devicetype2'];
     $dataExplain2 = $data['dataexplain2'];
 
-    $sql = "SELECT 1 FROM AZW150_vzconfig  WHERE userid='$customerId' AND actionid='$actionId'
+    $sql = "SELECT 1 FROM AZW150_vzconfig3  WHERE userid='$customerId' AND actionid='$actionId'
             AND actionclass='$actionClass' AND vzstartdt='$vzStartDt'";
 
     if ($result = sqlsrv_query($conn, $sql)) {
@@ -167,7 +168,7 @@ function createVZConfig($conn, $customerId, $data, $today, $hasHistory, &$vzHist
                 $today = "'" . $today . "'";
             } else {
                 $newActionId = $actionId;
-                $today = "CONVERT(VARCHAR(10)," . SCH . ".GETJPDATE()+1,120)+' 00:00:00'";
+                $today = "CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE()+1,120)+' 00:00:00'";
             }
             if (is_empty($deviceId1 = getDeviceIdByDisplayCdWithDeviceType($conn, $customerId, $displayCd1, $deviceType1, $code, $errors))) {
                 return false;
@@ -177,7 +178,7 @@ function createVZConfig($conn, $customerId, $data, $today, $hasHistory, &$vzHist
                 if (is_empty($deviceId2 = getDeviceIdByDisplayCdWithDeviceType($conn, $customerId, $displayCd2, $deviceType2, $code, $errors))) {
                     return false;
                 }
-                $sql = "INSERT INTO AZW150_vzconfig
+                $sql = "INSERT INTO AZW150_vzconfig3
                     (userid,actionid,vzstartdt,actionclass,actionname,actionorder,actionexplain,actionsummary,
                     displaycd1,deviceid1,devicetype1,dataexplain1,color1,
                     displaycd2,deviceid2,devicetype2,dataexplain2) VALUES
@@ -185,7 +186,7 @@ function createVZConfig($conn, $customerId, $data, $today, $hasHistory, &$vzHist
                     '$displayCd1','$deviceId1','$deviceType1','$dataExplain1','$actionColor',
                     '$displayCd2','$deviceId2','$deviceType2','$dataExplain2')";
             } else {
-                $sql = "INSERT INTO AZW150_vzconfig
+                $sql = "INSERT INTO AZW150_vzconfig3
                     (userid,actionid,vzstartdt,actionclass,actionname,actionorder,actionexplain,actionsummary,
                     displaycd1,deviceid1,devicetype1,dataexplain1,color1) VALUES
                     ('$customerId','$newActionId',$today,'$actionClass','$actionName','$actionOrder','$actionExplain','$actionSummary',
@@ -237,6 +238,7 @@ if (checkUploadFile($csvFile, $code, $errors)) {
 }
 
 $staffId = $loginUser->getUserId();
+$SCH = $loginUser->getHostCd();
 
 //DB更新
 if ($code == '200') {
@@ -272,7 +274,7 @@ if ($code == '200') {
             if ($code == '200' && !is_empty($vzHistory)) {
                 $vzHistory = "さんの可視化の設定の変更が完了しました。\n" . $vzHistory;
                 $insertSql = "INSERT INTO AZW152_vznoticetbl(receiveuser,senduser,noticetype,title,registdate,content)
-                          SELECT TOP 1 '$staffId','$customerId','K','可視化設定の変更が完了しました。',CONVERT(VARCHAR(19)," . SCH . ".GETJPDATE(),120),
+                          SELECT TOP 1 '$staffId','$customerId','K','可視化設定の変更が完了しました。',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120),
                           '【'+ut.roomcd+'】　'+ut.custname+'$vzHistory' FROM AZW001_frscview ut WHERE ut.custid='$customerId'";
 
                 if (!sqlsrv_query($conn, $insertSql)) {
