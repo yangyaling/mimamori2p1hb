@@ -157,7 +157,7 @@ function createVZConfig($conn, $customerId, $data, $today, $hasHistory, &$vzHist
     $deviceType2 = $data['devicetype2'];
     $dataExplain2 = $data['dataexplain2'];
 
-    $sql = "SELECT 1 FROM AZW150_vzconfig3  WHERE userid='$customerId' AND actionid='$actionId'
+    $sql = "SELECT 1 FROM AZW150_vzconfig  WHERE userid='$customerId' AND actionid='$actionId'
             AND actionclass='$actionClass' AND vzstartdt='$vzStartDt'";
 
     if ($result = sqlsrv_query($conn, $sql)) {
@@ -178,7 +178,7 @@ function createVZConfig($conn, $customerId, $data, $today, $hasHistory, &$vzHist
                 if (is_empty($deviceId2 = getDeviceIdByDisplayCdWithDeviceType($conn, $customerId, $displayCd2, $deviceType2, $code, $errors))) {
                     return false;
                 }
-                $sql = "INSERT INTO AZW150_vzconfig3
+                $sql = "INSERT INTO AZW150_vzconfig
                     (userid,actionid,vzstartdt,actionclass,actionname,actionorder,actionexplain,actionsummary,
                     displaycd1,deviceid1,devicetype1,dataexplain1,color1,
                     displaycd2,deviceid2,devicetype2,dataexplain2) VALUES
@@ -186,7 +186,7 @@ function createVZConfig($conn, $customerId, $data, $today, $hasHistory, &$vzHist
                     '$displayCd1','$deviceId1','$deviceType1','$dataExplain1','$actionColor',
                     '$displayCd2','$deviceId2','$deviceType2','$dataExplain2')";
             } else {
-                $sql = "INSERT INTO AZW150_vzconfig3
+                $sql = "INSERT INTO AZW150_vzconfig
                     (userid,actionid,vzstartdt,actionclass,actionname,actionorder,actionexplain,actionsummary,
                     displaycd1,deviceid1,devicetype1,dataexplain1,color1) VALUES
                     ('$customerId','$newActionId',$today,'$actionClass','$actionName','$actionOrder','$actionExplain','$actionSummary',
