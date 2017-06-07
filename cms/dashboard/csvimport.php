@@ -168,7 +168,7 @@ function createVZConfig($conn, $customerId, $data, $today, $hasHistory, &$vzHist
                 $today = "'" . $today . "'";
             } else {
                 $newActionId = $actionId;
-                $today = "CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE()+1,120)+' 00:00:00'";
+                $today = "CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120)+' 00:00:00'";
             }
             if (is_empty($deviceId1 = getDeviceIdByDisplayCdWithDeviceType($conn, $customerId, $displayCd1, $deviceType1, $code, $errors))) {
                 return false;
