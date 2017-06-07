@@ -8,9 +8,6 @@
 
 include 'cmslib.php';
 
-$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
-$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
-
 $arrReturn = array();
 $arrReturn['code'] = '';
 $arrReturn['username'] = '';
@@ -23,6 +20,9 @@ $arrReturn['zworkspassword'] = '';
 $hostCd = $_POST['hostcd'];
 $userId = $_POST['userid'];
 $password = $_POST['password'];
+
+$connectionOptions = array('Database' => DATABASE, 'Uid' => $hostCd, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
+$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
 
 if ($conn) {
 //    // TODO:TEST
