@@ -10,8 +10,8 @@ include 'lib.php';
 //$connectionOptions = array('Database' => DATABASE, 'Uid' => UID, 'PWD' => PWD, 'CharacterSet' => 'UTF-8');
 //$conn = sqlsrv_connect(SERVERNAME, $connectionOptions);
 //
-//$arrReturn = array();
-//$arrReturn['code'] = '200';
+$arrReturn = array();
+$arrReturn['code'] = '200';
 
 $staffId = $_POST['staffid'];
 $customerId = $_POST['custid'];
