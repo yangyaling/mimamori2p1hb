@@ -51,8 +51,8 @@ if ($conn) {
         */
         $fileName = $customerId . $suffix;
 
-        $picPath = 'http://mimamori2p1hb.azurewebsites.net/upload/' . $fileName;
-//        $picPath = 'http://' . $_SERVER ['HTTP_HOST'].'/upload/' . $fileName;
+//        $picPath = 'http://mimamori2p1hb.azurewebsites.net/upload/' . $fileName;
+        $picPath = 'http://' . $_SERVER ['HTTP_HOST'].'/upload/' . $fileName;
         updatePicInfo($conn, $customerId, $picPath, $updateDate, $code);
         if ($code == '200') {
 //        $fileSize = file_put_contents($fileName, $picData);
