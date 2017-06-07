@@ -41,6 +41,11 @@ function updatePicInfo($conn, $customerId, $picPath, $updateDate, &$code)
     }
 }
 
+//$hostCd = 'sch001';
+//$customerId = '00001';
+//$updateDate = '2017-06-07 00:00:00';
+//$picData = '';
+
 if ($conn) {
     if (!is_empty($customerId) && !is_empty($updateDate)) {
         /*
@@ -50,10 +55,10 @@ if ($conn) {
         $url = "http://imgsrc.baidu.com/forum/w=580/sign=db66b7dbd1ca7bcb7d7bc7278e086b3f/f5b11b90f603738d001f823ab51bb051f919ec86.jpg";
         $picData = file_get_contents($url);
         */
-        $fileName = $customerId . $suffix;
+        $fileName = $hostCd . '_' . $customerId . $suffix;
 
-//        $picPath = 'http://mimamori2p1hb.azurewebsites.net/upload/' . $hostCd . '_' . $fileName;
-        $picPath = 'http://' . $_SERVER ['HTTP_HOST'] . '/upload/' . $hostCd . '_' . $fileName;
+//        $picPath = 'http://mimamori2p1hb.azurewebsites.net/upload/'. $fileName;
+        $picPath = 'http://' . $_SERVER ['HTTP_HOST'] . '/upload/' . $fileName;
         updatePicInfo($conn, $customerId, $picPath, $updateDate, $code);
         if ($code == '200') {
 //        $fileSize = file_put_contents($fileName, $picData);
