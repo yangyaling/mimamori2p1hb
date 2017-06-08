@@ -82,9 +82,9 @@ function getWeeksArray($nowDate, &$sd)
 }
 
 /*
- * 今週の日付配列を取得
+ * 週の日付配列を取得
  */
-function getThisWeekDateArray2($conn, $arrCnt, $baseDate, $subDays, $staffId, $customerId, $label)
+function getWeekDateArray($conn, $arrCnt, $baseDate, $subDays, $staffId, $customerId, $label)
 {
     global $SCH;
     $weekValues = array(
@@ -211,131 +211,6 @@ function getThisWeekDateArray2($conn, $arrCnt, $baseDate, $subDays, $staffId, $c
     return $weekValues;
 }
 
-/*
- * 今週以外の日付配列を取得
- */
-function getOldWeekDateArray2($conn, $arrCnt, $baseDate, $staffId, $customerId, $label)
-{
-    global $SCH;
-    $weekValues = array(
-        'label' => $label,
-        'datestring' => $baseDate,
-        'deviceinfo' => array()
-    );
-    $deviceInfoList = array();
-
-    $sqlDeviceInfo = "SELECT zrm.roomcd,zrm.nodeid,zrm.deviceid,zrm.devicetype,zrm.devicename,zrm.unit,zrm.nodename,
-                      zrm.displayname,zrm.norder nodeorder,zrm.dorder,zrm.startdate,zrm.enddate
-                      FROM AZW001_frscview ut,AZW230_sensormstview zrm WHERE zrm.initflag=1 AND ut.staffid='$staffId' AND ut.custid='$customerId'
-                      AND ut.roomcd=zrm.roomcd AND ut.floorno=zrm.floorno AND zrm.deviceclass='1'";
-
-    $sqlBS = ",ISNULL(bs.bs,'0') bs";
-    $sqlBSWhere = "LEFT OUTER JOIN (SELECT bzd.nodeid,CASE WHEN bzd.mv > 0 THEN '2' WHEN bzd.mv = 0 AND vzd.mv > 0 THEN '1'
-                    WHEN bzd.mv = 0 AND vzd.mv = 0 THEN '3' ELSE '4' END bs FROM (SELECT zrm.nodeid,COUNT(zd.value) mv
-                    FROM (SELECT nodeid,deviceid FROM AZW230_sensormstview WHERE initflag=1 AND startdate <= CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120)
-                    AND enddate IS NULL AND devicetype = '6') zrm LEFT OUTER JOIN AZW133_zworksdata zd ON zrm.deviceid = zd.deviceid
-                    AND zd.timestmp >= CAST(DATEDIFF(ss,'1970-01-01 00:00:00',DATEADD(hh,-1,'" . date('Y-m-d H:i:s') . "')) - 32400 AS BIGINT) * 1000 GROUP BY zrm.nodeid) bzd
-                    LEFT OUTER JOIN (SELECT zrm.nodeid,COUNT(zd.value) mv FROM (SELECT nodeid,deviceid FROM AZW230_sensormstview
-                    WHERE initflag=1 AND startdate <= CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120) AND enddate IS NULL AND devicetype != '6') zrm
-                    LEFT OUTER JOIN AZW133_zworksdata zd ON zrm.deviceid = zd.deviceid
-                    AND zd.timestmp >= CAST(DATEDIFF(ss,'1970-01-01 00:00:00',DATEADD(hh,-1,'" . date('Y-m-d H:i:s') . "')) - 32400 AS BIGINT) * 1000 GROUP BY zrm.nodeid) vzd
-                    ON bzd.nodeid = vzd.nodeid) bs ON bs.nodeid = zdm.nodeid";
-
-    $sql = "SELECT zdm.roomcd,zdm.nodeid,zdm.deviceid,zdm.devicetype,zdm.devicename,zdm.unit,zd.value,
-          CONVERT(VARCHAR(19),DATEADD(SECOND,zd.timestmp / 1000 + 9 * 3600,'1970-01-01 00:00:00'),120) dt,
-          zdm.nodename,zdm.displayname,da.dt $sqlBS
-          FROM (SELECT CONVERT(VARCHAR(10),DATEADD(DAY,v.number*-1,CAST('$baseDate' AS DATE)),120) dt
-          FROM AZW111_values v WHERE v.type='S' AND v.number < 7) da LEFT OUTER JOIN ($sqlDeviceInfo) zdm
-          ON zdm.startdate <= da.dt AND (zdm.enddate IS NULL OR zdm.enddate >= da.dt)
-          LEFT OUTER JOIN (SELECT deviceid,value,timestmp,date dt,ROW_NUMBER() OVER(PARTITION BY deviceid ORDER BY timestmp DESC) ni
-          FROM AZW138_zworkslastdata) zd ON zd.deviceid = zdm.deviceid AND zd.ni = 1
-          $sqlBSWhere
-          ORDER BY zdm.nodeorder,zdm.dorder,da.dt";
-
-    if ($result = sqlsrv_query($conn, $sql)) {
-        $index = 0;
-        $index2 = 0;
-        $dates = array();
-
-        $nodeId = '';
-        $nodeName = '';
-        $displayName = '';
-        $deviceId = '';
-        $deviceName = '';
-        $deviceUnit = '';
-        $latestValue = '';
-        $latestDate = '';
-        $bs = '';
-
-        while ($row = sqlsrv_fetch_array($result)) {
-            if (!is_empty($nodeId) && !is_empty($displayName) && ($nodeId != $row[1] || $displayName != $row[9])) {
-                $deviceInfoList[$index2] = array(array(
-                    'nodeid' => $nodeId,
-                    'nodename' => $nodeName,
-                    'displayname' => $displayName,
-                    'deviceid' => $deviceId,
-                    'devicename' => $deviceName,
-                    'deviceunit' => $deviceUnit,
-                    'latestvalue' => $latestValue,
-                    'latestdate' => $latestDate,
-                    'batterystatus' => $bs,
-                    'dd' => $dates,
-                    'devicevalues' => array()
-                ));
-                $dates = array();
-                $index = 0;
-                $index2 = $index2 + 1;
-            }
-
-//            if (!is_empty($row[1])) {
-            $dates[$index] = array('dt' => $row[10], 'deviceid' => $row[2]);
-            $index = $index + 1;
-//            }
-            $nodeId = $row[1];
-            $nodeName = $row[8];
-            $displayName = $row[9];
-            $deviceId = $row[2];
-            $deviceName = $row[4];
-            $deviceUnit = $row[5];
-            $latestValue = $row[6];
-            $latestDate = $row[7];
-            $bs = $row[11];
-        }
-        $deviceInfoList[$index2] = array(array(
-            'nodeid' => $nodeId,
-            'nodename' => $nodeName,
-            'displayname' => $displayName,
-            'deviceid' => $deviceId,
-            'devicename' => $deviceName,
-            'deviceunit' => $deviceUnit,
-            'latestvalue' => $latestValue,
-            'latestdate' => $latestDate,
-            'batterystatus' => $bs,
-            'dd' => $dates,
-            'devicevalues' => array()
-        ));
-
-        $idxDVL = 0;
-        foreach ($deviceInfoList as $divs) {
-            $deviceValues = array();
-            $idxDV = 0;
-            foreach ($divs[0]['dd'] as $div) {
-                if ($div['deviceid']) {
-                    $deviceValues[$idxDV] = getMainValues($conn, $arrCnt, $div['dt'], $div['deviceid']);
-                } else {
-                    $deviceValues[$idxDV] = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-                }
-                $idxDV = $idxDV + 1;
-            }
-            $deviceInfoList[$idxDVL][0]['devicevalues'] = $deviceValues;
-            $idxDVL = $idxDVL + 1;
-        }
-        $weekValues['deviceinfo'] = $deviceInfoList;
-    }
-
-    return $weekValues;
-}
-
 if ($conn) {
 ////基準日時
 //    $baseDate = '2017-05-18 10:35:55';
@@ -368,9 +243,9 @@ if ($conn) {
             } else {
                 $subDays = ($x % 7 - 1);
             }
-            $deviceInfo[$index] = getThisWeekDateArray2($conn, $arrCnt, $nowDate, $subDays, $staffId, $customerId, $weekValue['label']);
+            $deviceInfo[$index] = getWeekDateArray($conn, $arrCnt, $nowDate, $subDays, $staffId, $customerId, $weekValue['label']);
         } else {
-            $deviceInfo[$index] = getOldWeekDateArray2($conn, '', $weekValue['basedate'], $staffId, $customerId, $weekValue['label']);
+            $deviceInfo[$index] = getWeekDateArray($conn, '', $weekValue['basedate'], 6, $staffId, $customerId, $weekValue['label']);
         }
         $index = $index + 1;
     }
