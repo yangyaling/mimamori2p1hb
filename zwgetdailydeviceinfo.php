@@ -241,6 +241,7 @@ $arrReturn['code'] = $code;
 $arrReturn['picpath'] = $picPath;
 $arrReturn['picupdatedate'] = $picUpdateDate;
 $arrReturn['deviceinfo'] = $deviceInfo;
+$arrReturn['type'] = '0';
 
 sendResponse(json_encode($arrReturn));
 

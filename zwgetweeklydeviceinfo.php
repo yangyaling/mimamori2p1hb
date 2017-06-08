@@ -382,6 +382,7 @@ sqlsrv_close($conn);
 
 $arrReturn['code'] = $code;
 $arrReturn['deviceinfo'] = $deviceInfo;
+$arrReturn['type'] = '1';
 
 sendResponse(json_encode($arrReturn));
 
