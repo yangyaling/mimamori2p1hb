@@ -121,6 +121,7 @@ function getBaseInfo($conn, $facilityCd)
 }
 
 $SCH = $_POST['hostcd'];
+//$SCH = 'sch003';
 $UID = $SCH;
 
 $arrReturn = array();

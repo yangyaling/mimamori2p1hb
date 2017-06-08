@@ -60,7 +60,7 @@ function getUserTypeList($conn, $class)
 
 if ($conn) {
 //    $facilityCd = '0001';
-//    $userType == '1';
+//    $userType = '1';
     $sql2 = '';
     if ($userType == 'x' || $userType == '1' || $userType == '2') {
         // 1,2,3表示
