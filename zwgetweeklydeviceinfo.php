@@ -96,7 +96,7 @@ function getWeekDateArray($conn, $arrCnt, $baseDate, $subDays, $staffId, $custom
     $edn = $subDays + 1;
 
     $sqlDeviceInfo = "SELECT zrm.roomcd,zrm.nodeid,zrm.deviceid,zrm.devicetype,zrm.devicename,zrm.unit,zrm.nodename,
-                      zrm.displayname,zrm.norder nodeorder,zrm.dorder,zrm.startdate,zrm.enddate
+                      zrm.displaycd,zrm.displayname,zrm.norder nodeorder,zrm.dorder,zrm.startdate,zrm.enddate
                       FROM AZW001_frscview ut,AZW230_sensormstview zrm WHERE zrm.initflag=1 AND ut.staffid='$staffId' AND ut.custid='$customerId'
                       AND ut.roomcd=zrm.roomcd AND ut.floorno=zrm.floorno AND zrm.deviceclass='1'";
 
@@ -121,13 +121,14 @@ function getWeekDateArray($conn, $arrCnt, $baseDate, $subDays, $staffId, $custom
           LEFT OUTER JOIN (SELECT deviceid,value,timestmp,date dt,ROW_NUMBER() OVER(PARTITION BY deviceid ORDER BY timestmp DESC) ni
           FROM AZW138_zworkslastdata) zd ON zd.deviceid = zdm.deviceid AND zd.ni = 1
           $sqlBSWhere
-          ORDER BY zdm.nodeorder,zdm.dorder,da.dt";
+          ORDER BY zdm.nodeorder,zdm.displaycd,da.dt";
 
     if ($result = sqlsrv_query($conn, $sql)) {
         $index = 0;
         $index2 = 0;
         $dates = array();
 
+        $idxKey = '';
         $nodeId = '';
         $nodeName = '';
         $displayName = '';
@@ -139,7 +140,7 @@ function getWeekDateArray($conn, $arrCnt, $baseDate, $subDays, $staffId, $custom
         $bs = '';
 
         while ($row = sqlsrv_fetch_array($result)) {
-            if (!is_empty($nodeId) && !is_empty($displayName) && ($nodeId != $row[1] || $displayName != $row[9])) {
+            if (!is_empty($idxKey) && ($idxKey != ($row[8] . $row[9]))) {
                 $deviceInfoList[$index2] = array(array(
                     'nodeid' => $nodeId,
                     'nodename' => $nodeName,
@@ -171,6 +172,7 @@ function getWeekDateArray($conn, $arrCnt, $baseDate, $subDays, $staffId, $custom
             $latestValue = $row[6];
             $latestDate = $row[7];
             $bs = $row[11];
+            $idxKey = ($row[8] . $row[9]);
         }
         $deviceInfoList[$index2] = array(array(
             'nodeid' => $nodeId,

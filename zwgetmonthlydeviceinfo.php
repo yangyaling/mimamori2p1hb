@@ -118,7 +118,7 @@ function getMonthValuesP1($conn, $arrCnt, $conDate, $staffId, $customerId, $days
             MAX(CONVERT(VARCHAR(19),DATEADD(SECOND,zld.timestmp / 1000 + 9 * 3600,'1970-01-01 00:00:00'),120)) ldt,zdm.unit $sqlBS
             FROM (SELECT CONVERT(VARCHAR(10),DATEADD(dd,number,'$conDate'),120) AS dt FROM AZW111_values WHERE type='S'
             AND DATEADD(dd,number,'$conDate')<=DATEADD(dd,-1,CONVERT(VARCHAR(8),DATEADD(mm,1,'$conDate'),120)+'01')) zdt
-            LEFT OUTER JOIN (SELECT zrm.roomcd,zrm.nodeid,zrm.deviceid,zrm.devicetype,zrm.devicename,zrm.unit,zrm.nodename,
+            LEFT OUTER JOIN (SELECT zrm.roomcd,zrm.nodeid,zrm.deviceid,zrm.devicetype,zrm.devicename,zrm.unit,zrm.nodename,zrm.displaycd,
             zrm.displayname,zrm.norder nodeorder,zrm.dorder,zrm.startdate,zrm.enddate FROM AZW001_frscview ut,AZW230_sensormstview zrm
             WHERE zrm.initflag=1 AND ut.staffid='$staffId' AND ut.custid='$customerId' AND ut.roomcd=zrm.roomcd AND ut.floorno=zrm.floorno AND zrm.deviceclass='1') zdm
             ON zdm.startdate <= zdt.dt AND (zdm.enddate IS NULL OR zdm.enddate >= zdt.dt) LEFT OUTER JOIN AZW133_zworksdata zd
@@ -126,14 +126,15 @@ function getMonthValuesP1($conn, $arrCnt, $conDate, $staffId, $customerId, $days
             SELECT deviceid,value,timestmp,date dt,ROW_NUMBER() OVER(PARTITION BY deviceid ORDER BY timestmp DESC) ni
             FROM AZW138_zworkslastdata) zld ON zld.deviceid = zdm.deviceid AND zld.ni = 1
             $sqlBSWhere
-            GROUP BY zdt.dt,zdm.nodeid,zdm.deviceid,zd.date,zdm.nodename,zdm.displayname,zdm.devicename,zld.value,zdm.unit,zdm.nodeorder $sqlBSGroupBy
-            ORDER BY zdm.nodeorder,zdt.dt";
+            GROUP BY zdt.dt,zdm.nodeid,zdm.deviceid,zd.date,zdm.nodename,zdm.displaycd,zdm.displayname,zdm.devicename,zld.value,zdm.unit,zdm.nodeorder $sqlBSGroupBy
+            ORDER BY zdm.nodeorder,zdm.displaycd,zdt.dt";
 
     if ($result = sqlsrv_query($conn, $sql)) {
         $index2 = 0;
         $deviceInfo = array();
         $deviceInfoList = array();
 
+        $idxKey = '';
         $nodeId = '';
         $nodeName = '';
         $displayName = '';
@@ -145,7 +146,7 @@ function getMonthValuesP1($conn, $arrCnt, $conDate, $staffId, $customerId, $days
         $bs = '';
 
         while ($row = sqlsrv_fetch_array($result)) {
-            if (!is_empty($nodeId) && !is_empty($displayName) && ($nodeId != $row[1] || $displayName != $row[4])) {
+            if (!is_empty($idxKey) && ($idxKey != ($row[3] . $row[4]))) {
                 $deviceInfo = adjustValues($days, $deviceInfo, $arrCnt);
                 $deviceInfoList[$index2] = array(array(
                     'nodeid' => $nodeId,
@@ -174,6 +175,7 @@ function getMonthValuesP1($conn, $arrCnt, $conDate, $staffId, $customerId, $days
             $latestValue = $row[7];
             $latestDate = $row[8];
             $bs = $row[10];
+            $idxKey = ($row[3] . $row[4]);
         }
         $deviceInfo = adjustValues($days, $deviceInfo, $arrCnt);
         $deviceInfoList[$index2] = array(array(
