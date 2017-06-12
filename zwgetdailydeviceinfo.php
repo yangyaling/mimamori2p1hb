@@ -31,38 +31,6 @@ $nodeId = $_POST['nodeid'];
 include 'zwgetbatterystatus.php';
 include 'zwgetdailydeviceinfocommon.php';
 
-//function getSubDeviceInfo($conn, $staffId, $customerId, $nodeId)
-//{
-//    $deviceIdArr = array();
-//
-//    $sql = "SELECT zrm.deviceid FROM AZW001_frscview ut,AZW230_sensormstview zrm WHERE ut.staffid='$staffId'
-//            AND ut.custid='$customerId' AND ut.roomcd=zrm.roomcd AND zrm.deviceclass='1' AND zrm.nodeid='$nodeId'
-//            ORDER BY zrm.devicetype";
-//    $result = sqlsrv_query($conn, $sql);
-//
-//    if ($result) {
-//        $index = 0;
-//        while ($row = sqlsrv_fetch_array($result)) {
-//            $deviceIdArr[$index] = $row[0];
-//            $index = $index + 1;
-//        }
-//    }
-//
-//    return $deviceIdArr;
-//}
-
-//function getDateArray($sDay, $max)
-//{
-//    $dates = array();
-//    $index = 0;
-//    while ($index < $max) {
-//        $dates[$index] = $sDay;
-//        $sDay = date('Y-m-d', strtotime('+1 day', strtotime($sDay)));
-//        $index = $index + 1;
-//    }
-//    return $dates;
-//}
-
 function getDeviceInfo2($conn, &$code, $arrCnt, $baseDate, $staffId, $customerId, $deviceClass, $nodeId = '')
 {
     global $SCH;
@@ -93,7 +61,7 @@ function getDeviceInfo2($conn, &$code, $arrCnt, $baseDate, $staffId, $customerId
     }
 
     $sqlDeviceInfo = "SELECT zrm.roomcd,zrm.nodeid,zrm.deviceid,zrm.devicetype,zrm.devicename,zrm.unit,zrm.nodename,
-                      zrm.displayname,zrm.norder nodeorder,zrm.dorder,zrm.startdate,zrm.enddate
+                      zrm.displayname,zrm.dorder,zrm.startdate,zrm.enddate
                       FROM AZW001_frscview ut,AZW230_sensormstview zrm WHERE zrm.initflag=1 AND ut.staffid='$staffId' AND ut.custid='$customerId'
                       AND ut.roomcd=zrm.roomcd AND ut.floorno=zrm.floorno AND zrm.deviceclass='$deviceClass' $sqlWhere";
 
@@ -106,7 +74,7 @@ function getDeviceInfo2($conn, &$code, $arrCnt, $baseDate, $staffId, $customerId
           LEFT OUTER JOIN (SELECT deviceid,value,timestmp,date dt,ROW_NUMBER() OVER(PARTITION BY deviceid ORDER BY timestmp DESC) ni
           FROM AZW138_zworkslastdata) zd ON zd.deviceid = zdm.deviceid AND zd.ni = 1
           $sqlBSWhere
-          ORDER BY da.dt,zdm.nodeorder,zdm.dorder";
+          ORDER BY da.dt,zdm.nodename,zdm.dorder";
 
     if ($result = sqlsrv_query($conn, $sql)) {
         $index = 0;
@@ -178,13 +146,6 @@ function getDeviceInfo2($conn, &$code, $arrCnt, $baseDate, $staffId, $customerId
             'datestring' => $dateString,
             'deviceinfo' => $deviceInfo
         );
-
-//        if ($deviceInfo) {
-//            foreach ($deviceInfoList as $values) {
-//                foreach ($values as $value) {
-//                }
-//            }
-//        }
     } else {
         $code = '501';
     }
@@ -194,7 +155,7 @@ function getDeviceInfo2($conn, &$code, $arrCnt, $baseDate, $staffId, $customerId
 
 if ($conn) {
 ////基準日時
-//    $baseDate = '2017-05-26 14:25:55';
+//    $baseDate = '2017-06-12 14:25:55';
 ////ユーザID１
 //    $staffId = 'sw00001';
 ////ユーザID０

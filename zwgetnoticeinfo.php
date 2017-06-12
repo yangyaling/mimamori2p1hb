@@ -113,15 +113,15 @@ function getAlertInfo($conn, $sendUser, &$code, &$errors)
             LEFT OUTER JOIN AZW005_custmst cm ON cm.custid=nt.senduser
             INNER JOIN (SELECT zrm.roomname,zrm.nodeid,sd.scenarioid,sd.scenarioname,zrm.devicename,zrm.unit,ISNULL(CAST(sd.time AS VARCHAR(30)),'-') time,
             ISNULL(CAST(sd.value AS VARCHAR(30)),'-') value,ISNULL(sd.rpoint,CASE WHEN zrm.pattern = 1 THEN '反応なし'
-            WHEN zrm.pattern = 2 THEN '使用なし' ELSE '-' END) rpoint,zrm.displayname,zrm.nodeorder,zrm.zi
+            WHEN zrm.pattern = 2 THEN '使用なし' ELSE '-' END) rpoint,zrm.displayname,zrm.nodename,zrm.zi
             FROM (SELECT roomcd roomname,nodeid,nodename,displayname,deviceid,devicename,devicetype,CASE WHEN deviceclass = 1 AND devicetype = 4 THEN 1
             WHEN deviceclass = 1 AND devicetype = 5 THEN 2 ELSE 3 END pattern,unit,ROW_NUMBER() OVER(PARTITION BY nodeid
-            ORDER BY deviceclass,devicetype) zi,norder nodeorder FROM AZW230_sensormstview WHERE deviceclass != '9'
+            ORDER BY deviceclass,devicetype) zi FROM AZW230_sensormstview WHERE deviceclass != '9'
             AND deviceclass IS NOT NULL AND custid='$sendUser') zrm INNER JOIN (SELECT si.scenarioid,si.scenarioname,sd.deviceid,sd.pattern,sd.time,sd.value,sd.rpoint
             FROM AZW141_scenarioinfo si,AZW142_scenariodtl sd WHERE si.scenarioid=sd.scenarioid) sd ON zrm.deviceid = sd.deviceid) s
             ON s.scenarioid=nt.subtitle WHERE nt.noticetype='1' AND nt.status='0' AND nt.senduser='$sendUser'
-            GROUP BY nt.noticetype,nt.status,s.nodeorder,nt.registdate,s.scenarioname,s.devicename,s.value,s.unit,s.time,s.rpoint,s.roomname,s.nodeid,s.scenarioid
-            ORDER BY nt.noticetype ASC,nt.status ASC,nt.registdate DESC,s.nodeorder";
+            GROUP BY nt.noticetype,nt.status,s.nodename,nt.registdate,s.scenarioname,s.devicename,s.value,s.unit,s.time,s.rpoint,s.roomname,s.nodeid,s.scenarioid
+            ORDER BY nt.noticetype ASC,nt.status ASC,nt.registdate DESC,s.nodename";
 
     if ($result = sqlsrv_query($conn, $sql)) {
         $index = 0;
@@ -176,7 +176,7 @@ function getCurFacilityCd($conn, $sendUser, &$code, &$errors)
 
 if ($conn) {
 //    $staffId = 'sw00001';
-//    $customerId = '00008';
+//    $customerId = '00001';
 //    $startDate = '2017-04-28';//一覧：当日　履歴(直近1ヶ月):当日　履歴(カレンダー):なし
 //    $selectDate = '';//履歴(カレンダー)
 //    $historyFlg = '0';//0:当日；1:履歴；

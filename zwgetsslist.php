@@ -53,10 +53,10 @@ function getSensorPlaceList($conn, $staffId, $customerId, &$code)
     global $SCH;
 
     $sql = "SELECT DISTINCT smv.roomcd,smv.gatewayid,smv.nodeid,smv.nodename,smv.displayname,smv.place,smv.placename,
-            ISNULL(smv.nodetype,'') nodetype,ut.mainnodeid,smv.norder,smv.displaycd,smv.memo,smv.serial,smv.startdate,smv.initflag
+            ISNULL(smv.nodetype,'') nodetype,ut.mainnodeid,smv.displaycd,smv.memo,smv.serial,smv.startdate,smv.initflag
             FROM AZW230_sensormstview smv INNER JOIN AZW001_frscview ut ON ut.staffid='$staffId' AND ut.custid='$customerId'
             AND ut.roomcd=smv.roomcd AND ut.floorno=smv.floorno AND smv.nodetype IS NOT NULL
-            AND smv.startdate<=CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120) AND smv.enddate IS NULL ORDER BY smv.norder";
+            AND smv.startdate<=CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120) AND smv.enddate IS NULL ORDER BY smv.nodename";
 
     $result = sqlsrv_query($conn, $sql);
     $sensorPlaceList = array();
@@ -77,13 +77,13 @@ function getSensorPlaceList($conn, $staffId, $customerId, &$code)
                 'placename' => $row[6],
                 'nodetype' => $row[7],
                 'mainnodeid' => $row[8],
-                'olddisplaycd' => $row[10],
-                'displaycd' => $row[10],
-                'memo' => $row[11],
-                'oldmemo' => $row[11],
-                'serial' => $row[12],
-                'startdate' => $row[13],
-                'initflag' => $row[14]
+                'olddisplaycd' => $row[9],
+                'displaycd' => $row[9],
+                'memo' => $row[10],
+                'oldmemo' => $row[10],
+                'serial' => $row[11],
+                'startdate' => $row[12],
+                'initflag' => $row[13]
             );
             $index = $index + 1;
         }
@@ -95,8 +95,8 @@ function getSensorPlaceList($conn, $staffId, $customerId, &$code)
 }
 
 if ($conn) {
-//    $staffId = 'sw00001';
-//    $customerId = '00002';
+//    $staffId = 'sh00001';
+//    $customerId = '00001';
     $scenarioList = getScenarioList($conn, $staffId, $customerId, $code);
     $sensorPlaceList = getSensorPlaceList($conn, $staffId, $customerId, $code);
     $displayList = getCVList($conn, CLASS_NODE_LOCATION);

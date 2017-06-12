@@ -19,7 +19,7 @@ function getDeviceInfo($conn, $staffId, $customerId, $deviceClass, $nodeId = '')
         $sqlWhere = "AND zrm.nodeid='$nodeId'";
     }
 
-    $sqlDeviceInfo = "SELECT zrm.roomcd,zrm.floorno,zrm.nodeid,zrm.deviceid,zrm.devicetype,zrm.devicename,zrm.unit,zrm.nodename,zrm.displayname,zrm.norder nodeorder,zrm.dorder
+    $sqlDeviceInfo = "SELECT zrm.roomcd,zrm.floorno,zrm.nodeid,zrm.deviceid,zrm.devicetype,zrm.devicename,zrm.unit,zrm.nodename,zrm.displayname,zrm.dorder
                       FROM AZW001_frscview ut,AZW230_sensormstview zrm WHERE zrm.initflag=1 AND zrm.startdate <= CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120) AND zrm.enddate IS NULL AND ut.staffid='$staffId' AND ut.custid='$customerId'
                       AND ut.roomcd=zrm.roomcd AND ut.floorno=zrm.floorno AND zrm.deviceclass='$deviceClass' $sqlWhere";
 
@@ -27,7 +27,7 @@ function getDeviceInfo($conn, $staffId, $customerId, $deviceClass, $nodeId = '')
             CONVERT(VARCHAR(19),DATEADD(SECOND,zd.timestmp / 1000 + 9 * 3600,'1970-01-01 00:00:00'),120) dt,zdm.nodename,zdm.displayname,zdm.floorno
             FROM ($sqlDeviceInfo) zdm LEFT OUTER JOIN (
             SELECT deviceid,value,timestmp,ROW_NUMBER() OVER(PARTITION BY deviceid ORDER BY timestmp DESC) ni
-            FROM AZW133_zworksdata) zd ON zd.deviceid = zdm.deviceid AND zd.ni = 1 ORDER BY zdm.nodeorder,zdm.dorder";
+            FROM AZW133_zworksdata) zd ON zd.deviceid = zdm.deviceid AND zd.ni = 1 ORDER BY zdm.nodename,zdm.dorder";
 
     $result = sqlsrv_query($conn, $sql);
     if ($result) {

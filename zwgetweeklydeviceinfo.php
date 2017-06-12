@@ -96,7 +96,7 @@ function getWeekDateArray($conn, $arrCnt, $baseDate, $subDays, $staffId, $custom
     $edn = $subDays + 1;
 
     $sqlDeviceInfo = "SELECT zrm.roomcd,zrm.nodeid,zrm.deviceid,zrm.devicetype,zrm.devicename,zrm.unit,zrm.nodename,
-                      zrm.displaycd,zrm.displayname,zrm.norder nodeorder,zrm.dorder,zrm.startdate,zrm.enddate
+                      zrm.displaycd,zrm.displayname,zrm.dorder,zrm.startdate,zrm.enddate
                       FROM AZW001_frscview ut,AZW230_sensormstview zrm WHERE zrm.initflag=1 AND ut.staffid='$staffId' AND ut.custid='$customerId'
                       AND ut.roomcd=zrm.roomcd AND ut.floorno=zrm.floorno AND zrm.deviceclass='1'";
 
@@ -121,7 +121,7 @@ function getWeekDateArray($conn, $arrCnt, $baseDate, $subDays, $staffId, $custom
           LEFT OUTER JOIN (SELECT deviceid,value,timestmp,date dt,ROW_NUMBER() OVER(PARTITION BY deviceid ORDER BY timestmp DESC) ni
           FROM AZW138_zworkslastdata) zd ON zd.deviceid = zdm.deviceid AND zd.ni = 1
           $sqlBSWhere
-          ORDER BY zdm.nodeorder,zdm.displaycd,da.dt";
+          ORDER BY zdm.nodename,zdm.displaycd,da.dt";
 
     if ($result = sqlsrv_query($conn, $sql)) {
         $index = 0;
@@ -215,11 +215,11 @@ function getWeekDateArray($conn, $arrCnt, $baseDate, $subDays, $staffId, $custom
 
 if ($conn) {
 ////基準日時
-//    $baseDate = '2017-05-18 10:35:55';
+//    $baseDate = '2017-06-12 14:35:55';
 ////ユーザID１
-//    $staffId = 'sw00001';
+//    $staffId = 'sh00001';
 ////ユーザID０
-//    $customerId = '00002';
+//    $customerId = '00001';
     $y = substr($baseDate, 0, 4);
     $m = substr($baseDate, 5, 2);
     $d = substr($baseDate, 8, 2);
