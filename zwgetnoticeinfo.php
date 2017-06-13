@@ -21,6 +21,7 @@ $notices = array();
 $facilityCd = $_POST['facilitycd'];
 $staffId = $_POST['staffid'];
 $customerId = $_POST['custid'];
+$subTitle = $_POST['subtitle'];
 $startDate = $_POST['startdate'];//一覧：当日　履歴(直近1ヶ月):当日　履歴(カレンダー):なし
 $selectDate = $_POST['selectdate'];//履歴(カレンダー)
 $historyFlg = $_POST['historyflg'];//0:当日；1:履歴；
@@ -59,7 +60,7 @@ function getNoticeInfo($conn, $startDate, $selectDate, $facilityCd, $sendUser, $
 //            ORDER BY s.noticetype ASC,s.status ASC,s.registdate DESC";
     } else if ($noticeType == '1') {
         $sql = "SELECT nt.noticeid,nt.title,nt.senduser,cm.custname,nt.receiveuser,sm.staffname groupname,nt.noticetype,
-                nt.status,nt.confirmuser,nt.content,CONVERT(CHAR(19),nt.registdate,120) registdate
+                nt.status,nt.confirmuser,nt.content,CONVERT(CHAR(19),nt.registdate,120) registdate,subtitle
                 FROM AZW121_noticetbl nt INNER JOIN (SELECT DISTINCT sr.staffid,fv.roomcd,fv.custid,fv.custname
                 FROM AZW001_frscview fv INNER JOIN AZW007_staffrelation sr ON sr.facilitycd=fv.facilitycd
                 WHERE fv.facilitycd='$facilityCd') fs ON fs.staffid=nt.receiveuser AND fs.custid=nt.senduser
@@ -92,7 +93,8 @@ function getNoticeInfo($conn, $startDate, $selectDate, $facilityCd, $sendUser, $
                 'status' => $row[7],
                 'staupduser' => $row[8],
                 'content' => $row[9],
-                'registdate' => $row[10]
+                'registdate' => $row[10],
+                'subtitle' => $row[11]
             );
             $index = $index + 1;
         }
@@ -104,7 +106,7 @@ function getNoticeInfo($conn, $startDate, $selectDate, $facilityCd, $sendUser, $
     return $notices;
 }
 
-function getAlertInfo($conn, $sendUser, &$code, &$errors)
+function getAlertInfo($conn, $sendUser, $subTitle, &$code, &$errors)
 {
     $notices = array();
 
@@ -119,7 +121,7 @@ function getAlertInfo($conn, $sendUser, &$code, &$errors)
             ORDER BY deviceclass,devicetype) zi FROM AZW230_sensormstview WHERE deviceclass != '9'
             AND deviceclass IS NOT NULL AND custid='$sendUser') zrm INNER JOIN (SELECT si.scenarioid,si.scenarioname,sd.deviceid,sd.pattern,sd.time,sd.value,sd.rpoint
             FROM AZW141_scenarioinfo si,AZW142_scenariodtl sd WHERE si.scenarioid=sd.scenarioid) sd ON zrm.deviceid = sd.deviceid) s
-            ON s.scenarioid=nt.subtitle WHERE nt.noticetype='1' AND nt.status='0' AND nt.senduser='$sendUser'
+            ON s.scenarioid=nt.subtitle WHERE nt.noticetype='1' AND nt.status='0' AND nt.senduser='$sendUser' AND nt.subtitle='$subTitle'
             GROUP BY nt.noticetype,nt.status,s.nodename,nt.registdate,s.scenarioname,s.devicename,s.value,s.unit,s.time,s.rpoint,s.roomname,s.nodeid,s.scenarioid
             ORDER BY nt.noticetype ASC,nt.status ASC,nt.registdate DESC,s.nodename";
 
@@ -184,7 +186,7 @@ if ($conn) {
 
 //    if (!is_empty($customerId) && $noticeType == '1') {
     if (!is_empty($customerId)) {
-        $notices = getAlertInfo($conn, $customerId, $code, $errors);
+        $notices = getAlertInfo($conn, $customerId, $subTitle, $code, $errors);
         $facilityCd = getCurFacilityCd($conn, $customerId, $code, $errors);
     } else if (!is_empty($staffId)) {
 //        $notices = getNoticeInfo($conn, $startDate, $selectDate, $staffId, $historyFlg, $noticeType, $code, $errors);
