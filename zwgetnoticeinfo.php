@@ -110,6 +110,10 @@ function getAlertInfo($conn, $sendUser, $subTitle, &$code, &$errors)
 {
     $notices = array();
 
+    if (!is_empty($subTitle)) {
+        $subTitle = "AND nt.subtitle='$subTitle'";
+    }
+
     $sql = "SELECT CONVERT(CHAR(19),nt.registdate,120) registdate,s.scenarioname,s.devicename,s.value,s.unit,s.time,s.rpoint,s.roomname,s.nodeid,s.scenarioid
             FROM AZW121_noticetbl nt LEFT OUTER JOIN AZW004_staffmst sm ON sm.staffid=nt.receiveuser
             LEFT OUTER JOIN AZW005_custmst cm ON cm.custid=nt.senduser
@@ -121,7 +125,7 @@ function getAlertInfo($conn, $sendUser, $subTitle, &$code, &$errors)
             ORDER BY deviceclass,devicetype) zi FROM AZW230_sensormstview WHERE deviceclass != '9'
             AND deviceclass IS NOT NULL AND custid='$sendUser') zrm INNER JOIN (SELECT si.scenarioid,si.scenarioname,sd.deviceid,sd.pattern,sd.time,sd.value,sd.rpoint
             FROM AZW141_scenarioinfo si,AZW142_scenariodtl sd WHERE si.scenarioid=sd.scenarioid) sd ON zrm.deviceid = sd.deviceid) s
-            ON s.scenarioid=nt.subtitle WHERE nt.noticetype='1' AND nt.status='0' AND nt.senduser='$sendUser' AND nt.subtitle='$subTitle'
+            ON s.scenarioid=nt.subtitle WHERE nt.noticetype='1' AND nt.status='0' AND nt.senduser='$sendUser' $subTitle
             GROUP BY nt.noticetype,nt.status,s.nodename,nt.registdate,s.scenarioname,s.devicename,s.value,s.unit,s.time,s.rpoint,s.roomname,s.nodeid,s.scenarioid
             ORDER BY nt.noticetype ASC,nt.status ASC,nt.registdate DESC,s.nodename";
 
