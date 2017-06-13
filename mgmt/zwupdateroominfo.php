@@ -48,8 +48,8 @@ if ($conn) {
                         }
                     }
                 } else {
-                    $sql = "INSERT INTO AZW134_roommst(roomcd,floorno,facilitycd,updateuser,updatedate)
-                            VALUES('$roomCd','$floorNo','$facilityCd','admin'," . $SCH . ".GETJPDATE())";
+                    $sql = "INSERT INTO AZW134_roommst(roomcd,floorno,facilitycd,createuser,createdate)
+                            VALUES('$roomCd','$floorNo','$facilityCd','Sys',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120))";
                     if (!$result = sqlsrv_query($conn, $sql)) {
                         $code = '503';
                         $errors = sqlsrv_errors();

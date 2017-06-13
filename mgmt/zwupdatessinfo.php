@@ -132,8 +132,8 @@ if ($conn) {
                 $handleFlag = getHandleFlag($data);
                 if ($handleFlag == H_C) {
                     if (!is_empty($serial) && !is_empty($sensorId)) {
-                        $sql = "INSERT INTO AZW009_serialrelation(serial,sensorid,facilitycd,custid,startdate)
-                            VALUES('$serial','$sensorId','$facilityCd','$customerId',CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120))";
+                        $sql = "INSERT INTO AZW009_serialrelation(serial,sensorid,facilitycd,custid,startdate,createuser,createdate)
+                            VALUES('$serial','$sensorId','$facilityCd','$customerId',CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120),'Sys',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120))";
 
                         if (!$result = sqlsrv_query($conn, $sql)) {
                             $code = '504';
@@ -218,8 +218,8 @@ if ($conn) {
                                 }
 
                                 if (!is_empty($serial) && !is_empty($sensorId)) {
-                                    $sql = "INSERT INTO AZW009_serialrelation(serial,sensorid,facilitycd,custid,startdate) VALUES
-                                            ('$serial','$sensorId','$facilityCd','$customerId',CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120))";
+                                    $sql = "INSERT INTO AZW009_serialrelation(serial,sensorid,facilitycd,custid,startdate,createuser,createdate) VALUES
+                                            ('$serial','$sensorId','$facilityCd','$customerId',CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120),'Sys',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120))";
 
                                     if (!$result = sqlsrv_query($conn, $sql)) {
                                         $code = '508';

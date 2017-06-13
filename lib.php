@@ -13,12 +13,6 @@ define("MYSQL_USER", "b5b35eecdcd068");
 define("MYSQL_PASS", "b5074189");
 define("MYSQL_DB", "rdbeacoAd7N1JMXE");
 
-//define("SERVERNAME", "tcp:mimamori.japaneast.cloudapp.azure.com,1433");
-//define("DATABASE", "mimamoriDB2Test");
-//define("INPUT_DATABASE", "mimamoriInputDB");
-//define("UID", "iosapp");
-//define("PWD", "Passw0rd");
-
 define("SERVERNAME", "tcp:mimamori.database.windows.net,1433");
 define("DATABASE", "mimamoriDB2");
 //define("UID", "sch001");
@@ -30,7 +24,7 @@ define("LOGINUSER", "loginuser");
 define("SENSORINFO", "sensorinfo");
 define("CLASS_SCENARIO_SCOPE", "scenarioscope");
 define("CLASS_GROUP", "group");
-define("CLASS_NODE_LOCATION", "nodelocation");
+//define("CLASS_NODE_LOCATION", "nodelocation");
 define("CLASS_NODE_PLACE", "nodeplace");
 define("CLASS_NODE_TYPE", "nodetype");
 define("CLASS_DEVICE_CLASS", "deviceclass");
@@ -77,10 +71,8 @@ function getCVList($conn, $class, $whereString = '')
 {
     $sql = "SELECT [code],[value] FROM AZW110_classmst WHERE classcd='$class' $whereString ORDER BY [order]";
 
-    $result = sqlsrv_query($conn, $sql);
     $cvs = array();
-
-    if ($result) {
+    if ($result = sqlsrv_query($conn, $sql)) {
         $index = 0;
         while ($row = sqlsrv_fetch_array($result)) {
             $cvs[$index] = array(
@@ -92,6 +84,24 @@ function getCVList($conn, $class, $whereString = '')
     }
 
     return $cvs;
+}
+
+function getDisplayList($conn)
+{
+    global $SCH;
+    $sql = "SELECT [code],[value] FROM " . $SCH . "..[AZW010_nodelocationmst] ORDER BY [code]";
+
+    $displayList = array();
+    if ($result = sqlsrv_query($conn, $sql)) {
+        while ($row = sqlsrv_fetch_array($result)) {
+            $displayList[] = array(
+                'cd' => $row[0],
+                'name' => $row[1]
+            );
+        }
+    }
+
+    return $displayList;
 }
 
 function getBaseInfo($conn, $facilityCd)

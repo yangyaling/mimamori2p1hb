@@ -19,12 +19,13 @@ $cd = $_POST['cd'];
 //    $cd = '04';
 
 if ($conn && !is_empty($cd)) {
-    $sql = "SELECT TOP 1 cm.code,sr.displayname FROM AZW110_classmst cm LEFT OUTER JOIN AZW009_serialrelation sr ON cm.code=sr.displayname
-            WHERE cm.classcd='" . CLASS_NODE_LOCATION . "' AND cm.code='$cd' AND sr.displayname IS NOT NULL";
+    $sql = "SELECT TOP 1 cm.code,sr.displayname FROM AZW010_nodelocationmst cm 
+            LEFT OUTER JOIN AZW009_serialrelation sr ON cm.code=sr.displayname
+            WHERE cm.code='$cd' AND sr.displayname IS NOT NULL";
     $result = sqlsrv_query($conn, $sql);
 
     if (!sqlsrv_has_rows($result)) {
-        $sql = "DELETE FROM AZW110_classmst WHERE classcd='" . CLASS_NODE_LOCATION . "' AND code='$cd'";
+        $sql = "DELETE FROM AZW010_nodelocationmst WHERE code='$cd'";
 
         $result = sqlsrv_query($conn, $sql);
         if (!$result) {

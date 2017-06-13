@@ -51,8 +51,8 @@ if ($conn) {
                 $value = $data['value'];
                 $rPoint = $data['rpoint'];
 
-                $sql = "INSERT INTO AZW006_scenarioprotomst (protoid,protoname,nodetype,scopecd,starttime,endtime,devicetype,pattern,[time],[value],rpoint,updateuser,updatedate)
-                    VALUES('$protoId','$protoName','$nodeType','$scopeCd','$startTime','$endTime','$deviceType','$pattern','$time','$value','$rPoint','admin'," . $SCH . ".GETJPDATE())";
+                $sql = "INSERT INTO AZW006_scenarioprotomst (protoid,protoname,nodetype,scopecd,starttime,endtime,devicetype,pattern,[time],[value],rpoint,createuser,createdate)
+                    VALUES('$protoId','$protoName','$nodeType','$scopeCd','$startTime','$endTime','$deviceType','$pattern','$time','$value','$rPoint','Sys',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120))";
 
                 $result = sqlsrv_query($conn, $sql);
                 if (!$result) {

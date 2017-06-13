@@ -220,6 +220,7 @@ if ($conn) {
 //    $staffId = 'sh00001';
 ////ユーザID０
 //    $customerId = '00001';
+
     $y = substr($baseDate, 0, 4);
     $m = substr($baseDate, 5, 2);
     $d = substr($baseDate, 8, 2);

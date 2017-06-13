@@ -63,8 +63,8 @@ if ($conn) {
             $sql = "SELECT 1 FROM AZW008_custrelation WHERE custid='$customerId' AND roomcd='$roomCd' AND floorno='$floorNo'";
             $result = sqlsrv_query($conn, $sql);
             if (!sqlsrv_has_rows($result)) {
-                $sql = "INSERT INTO AZW008_custrelation(custid,roomcd,floorno,picpath,picupdatedate)
-                        VALUES ('$customerId','$roomCd','$floorNo',null,null)";
+                $sql = "INSERT INTO AZW008_custrelation(custid,roomcd,floorno,picpath,picupdatedate,createuser,createdate)
+                        VALUES ('$customerId','$roomCd','$floorNo',null,null,'$staffId',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120))";
                 $result = sqlsrv_query($conn, $sql);
                 if ($result) {
                     $arrReturn['code'] = '201';

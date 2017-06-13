@@ -26,8 +26,8 @@ function getMaxStaffId($conn, $facilityCd)
     $sql = "SELECT TOP 1 cp.initial + ISNULL(cm.maxstaffid,'00001') FROM AZW003_facilitymst fm
             INNER JOIN AZW002_hostmst hm ON fm.hostcd=hm.hostcd INNER JOIN AZW001_companymst cp ON hm.companycd=cp.companycd
             LEFT OUTER JOIN (SELECT RIGHT('00000' + CAST(MAX(RIGHT(sm.staffid,5)) + 1 AS VARCHAR), 5) maxstaffid
-            FROM AZW004_staffmst sm INNER JOIN AZW001_companymst cp ON SUBSTRING(sm.staffid,1,2)=cp.initial) cm ON 1=1
-            WHERE fm.facilitycd='$facilityCd'";
+            FROM (SELECT staffid FROM AZW004_staffmst UNION SELECT staffid FROM AZW004_staffmst_log) sm
+            INNER JOIN AZW001_companymst cp ON SUBSTRING(sm.staffid,1,2)=cp.initial) cm ON 1=1 WHERE fm.facilitycd='$facilityCd'";
     $result = sqlsrv_query($conn, $sql);
 
     if ($result && $row = sqlsrv_fetch_array($result)) {

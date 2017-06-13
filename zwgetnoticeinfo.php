@@ -183,6 +183,7 @@ function getCurFacilityCd($conn, $sendUser, &$code, &$errors)
 if ($conn) {
 //    $staffId = 'sw00001';
 //    $customerId = '00001';
+//    $subTitle = 'sg00005000070002';
 //    $startDate = '2017-04-28';//一覧：当日　履歴(直近1ヶ月):当日　履歴(カレンダー):なし
 //    $selectDate = '';//履歴(カレンダー)
 //    $historyFlg = '0';//0:当日；1:履歴；

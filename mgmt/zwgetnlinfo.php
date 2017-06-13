@@ -16,7 +16,7 @@ include '../lib.php';
 $nlList = array();
 
 if ($conn) {
-    $sql = "SELECT [code],[value] FROM AZW110_classmst WHERE classcd='" . CLASS_NODE_LOCATION . "' ORDER BY [order]";
+    $sql = "SELECT [code],[value] FROM AZW010_nodelocationmst ORDER BY [code]";
 
     if ($result = sqlsrv_query($conn, $sql)) {
         $index = 0;

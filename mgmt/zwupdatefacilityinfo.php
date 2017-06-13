@@ -37,7 +37,7 @@ if ($conn && !is_empty($facilityInfo)) {
         $sql = "UPDATE AZW003_facilitymst
                 SET hostcd='$hostCd',facilityname1='$facilityName1',facilityname1kana='$facilityName1Kana',
                 facilityname2='$facilityName2',facilityname2kana='$facilityName2Kana',floorcount='$floorCount',
-                roomcount='$roomCount',memo='$memo',updateuser='admin',updatedate=" . $SCH . ".GETJPDATE()
+                roomcount='$roomCount',memo='$memo',modifyuser='Sys',modifydate=" . $SCH . ".GETJPDATE()
                 WHERE facilitycd='$facilityCd'";
 
         $result = sqlsrv_query($conn, $sql);
@@ -47,9 +47,9 @@ if ($conn && !is_empty($facilityInfo)) {
         }
     } else {
         $sql = "INSERT INTO AZW003_facilitymst(facilitycd,hostcd,facilityname1,facilityname1kana,facilityname2,
-                facilityname2kana,floorcount,roomcount,memo,updateuser,updatedate)
+                facilityname2kana,floorcount,roomcount,memo,createuser,createdate)
                 VALUES('$facilityCd','$hostCd','$facilityName1','$facilityName1Kana','$facilityName2',
-                '$facilityName2Kana','$floorCount','$roomCount','$memo','admin'," . $SCH . ".GETJPDATE())";
+                '$facilityName2Kana','$floorCount','$roomCount','$memo','Sys',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120))";
 
         $result = sqlsrv_query($conn, $sql);
         if (!$result) {

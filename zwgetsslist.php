@@ -99,7 +99,7 @@ if ($conn) {
 //    $customerId = '00001';
     $scenarioList = getScenarioList($conn, $staffId, $customerId, $code);
     $sensorPlaceList = getSensorPlaceList($conn, $staffId, $customerId, $code);
-    $displayList = getCVList($conn, CLASS_NODE_LOCATION);
+    $displayList = getDisplayList($conn);
 } else {
     $code = '500';
 }

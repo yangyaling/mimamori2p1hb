@@ -58,8 +58,8 @@ if ($conn && !is_empty($staffList)) {
             }
         } else if (!is_empty($staffId)) {
             $sql = "INSERT INTO AZW004_staffmst
-                    (staffid,staffname,usertype,groupid,nickname,email,password,zworksemail,zworkspassword,updatedate)
-                    VALUES('$staffId','$nickname','$userType','1','$nickname',null,'P@ssw0rd','aimi.f507@gmail.com','a620507'," . $SCH . ".GETJPDATE())";
+                    (staffid,staffname,usertype,groupid,nickname,email,password,zworksemail,zworkspassword,updatedate,createuser,createdate)
+                    VALUES('$staffId','$nickname','$userType','1','$nickname',null,'P@ssw0rd','aimi.f507@gmail.com','a620507'," . $SCH . ".GETJPDATE(),'$staffId',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120))";
 
             $result = sqlsrv_query($conn, $sql);
             if (!$result) {
@@ -74,7 +74,7 @@ if ($conn && !is_empty($staffList)) {
                 $sql = "MERGE INTO AZW007_staffrelation s USING(SELECT '$staffId' staffid,facilitycd
                     FROM AZW003_facilitymst fm WHERE fm.hostcd=(SELECT hostcd FROM AZW003_facilitymst
                     WHERE facilitycd='$facilityCd')) u ON u.staffid=s.staffid AND u.facilitycd=s.facilitycd
-                    WHEN NOT MATCHED THEN INSERT (staffid,facilitycd) VALUES (u.staffid,u.facilitycd);";
+                    WHEN NOT MATCHED THEN INSERT (staffid,facilitycd,createuser,createdate) VALUES (u.staffid,u.facilitycd,'$staffId',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120));";
 
                 $result = sqlsrv_query($conn, $sql);
                 if (!$result) {

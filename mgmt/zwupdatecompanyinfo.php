@@ -38,7 +38,8 @@ if ($conn && !is_empty($companyList)) {
             }
         } else {
             if (!is_empty($cd) && !is_empty($initial)) {
-                $sql = "INSERT INTO AZW001_companymst(companycd,companyname,companynamekana,initial)VALUES('$cd','$name','$kana','$initial')";
+                $sql = "INSERT INTO AZW001_companymst(companycd,companyname,companynamekana,initial,createuser,createdate)
+                        VALUES('$cd','$name','$kana','$initial','Sys',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120))";
 
                 $result = sqlsrv_query($conn, $sql);
                 if (!$result) {

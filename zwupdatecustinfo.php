@@ -36,15 +36,15 @@ if ($conn) {
     //検索結果がある場合、更新処理を行う。
     if (sqlsrv_has_rows($result)) {
         $sql = "UPDATE AZW005_custmst SET custname='$userName',sex='$sex',birthday='$birthday',address='$address',
-                kakaritsuke='$kakaritsuke',drug='$drug',health='$health',other='$other',updateuser='$updateUser',
-                updatedate='$updateDate' WHERE custid='$customerId'";
+                kakaritsuke='$kakaritsuke',drug='$drug',health='$health',other='$other',modifyuser='$updateUser',
+                modifydate='$updateDate' WHERE custid='$customerId'";
         $result = sqlsrv_query($conn, $sql);
         if (!$result) {
             $arrReturn['code'] = '503';
         }
     } else {
         if (!is_empty($customerId) && !is_empty($updateDate)) {
-            $sql = "INSERT INTO AZW005_custmst(custid,custname,sex,birthday,address,kakaritsuke,drug,health,other,updateuser,updatedate)
+            $sql = "INSERT INTO AZW005_custmst(custid,custname,sex,birthday,address,kakaritsuke,drug,health,other,createuser,createdate)
                     VALUES ('$customerId','$userName','$sex','$birthday','$address','$kakaritsuke','$drug','$health','$other','$updateUser','$updateDate')";
 
             $result = sqlsrv_query($conn, $sql);

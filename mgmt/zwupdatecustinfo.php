@@ -37,7 +37,7 @@ if ($conn && !is_empty($customerList)) {
                 break;
             }
         } else if (!is_empty($customerId)) {
-            $sql = "INSERT INTO AZW005_custmst(custid,custname,updatedate)VALUES('$customerId','$customerName',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120))";
+            $sql = "INSERT INTO AZW005_custmst(custid,custname,createuser,createdate)VALUES('$customerId','$customerName','Sys',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120))";
 
             $result = sqlsrv_query($conn, $sql);
             if (!$result) {
@@ -54,7 +54,7 @@ if ($conn && !is_empty($customerList)) {
         if ($code == '200') {
             if (!is_empty($customerId) && !is_empty($roomCd)) {
                 $sql = "DELETE FROM AZW008_custrelation WHERE custid='$customerId';
-                       INSERT INTO AZW008_custrelation(custid,roomcd,floorno)VALUES('$customerId','$roomCd','$floorNo');";
+                       INSERT INTO AZW008_custrelation(custid,roomcd,floorno,createuser,createdate)VALUES('$customerId','$roomCd','$floorNo','Sys',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120));";
 
                 $result = sqlsrv_query($conn, $sql);
                 if (!$result) {

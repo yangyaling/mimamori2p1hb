@@ -24,8 +24,8 @@ $registDate = $_POST['registdate'];
 if ($conn) {
     //登録処理を行う。
     if (!is_empty($userId1)&&!is_empty($userId0)&&!is_empty($content)&&!is_empty($registDate)) {
-        $sql = "INSERT INTO AZW122_carememotbl(userid1,userid0,content,registdate)
-                          VALUES ('$userId1','$userId0','$content','$registDate')";
+        $sql = "INSERT INTO AZW122_carememotbl(userid1,userid0,content,registdate,createuser,createdate)
+                          VALUES ('$userId1','$userId0','$content','$registDate','$userId1',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120))";
         $result = sqlsrv_query($conn, $sql);
         if (!$result) {
             $code = '505';

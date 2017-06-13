@@ -22,11 +22,11 @@ if ($conn && !is_empty($nlList)) {
         $cd = $data['cd'];
         $name = $data['name'];
 
-        $sql = "SELECT 1 FROM AZW110_classmst WHERE classcd='" . CLASS_NODE_LOCATION . "' AND code='$cd'";
+        $sql = "SELECT 1 FROM AZW010_nodelocationmst WHERE code='$cd'";
         $result = sqlsrv_query($conn, $sql);
 
         if (sqlsrv_has_rows($result)) {
-            $sql = "UPDATE AZW110_classmst SET value='$name' WHERE classcd='" . CLASS_NODE_LOCATION . "' AND code='$cd'";
+            $sql = "UPDATE AZW010_nodelocationmst SET value='$name' WHERE code='$cd'";
 
             $result = sqlsrv_query($conn, $sql);
             if (!$result) {
@@ -36,7 +36,7 @@ if ($conn && !is_empty($nlList)) {
             }
         } else {
             if (!is_empty($cd)) {
-                $sql = "INSERT INTO AZW110_classmst(classcd,classname,code,[value],[order]) VALUES('" . CLASS_NODE_LOCATION . "','ノード置き場所１','$cd','$name','$cd')";
+                $sql = "INSERT INTO AZW010_nodelocationmst([code],[value],createuser,createdate) VALUES('$cd','$name','Sys',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120))";
 
                 $result = sqlsrv_query($conn, $sql);
                 if (!$result) {

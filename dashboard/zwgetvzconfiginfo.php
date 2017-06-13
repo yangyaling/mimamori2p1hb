@@ -39,8 +39,8 @@ if ($conn) {
                 cmd2.value displayname2,cmt1.value devicetypename1,cmt2.value devicetypename2,vz.vzstartdt,vz.vzenddt FROM AZW001_frscview fv
                 INNER JOIN AZW134_roommst zwm ON zwm.roomcd=fv.roomcd AND zwm.facilitycd=fv.facilitycd AND zwm.floorno=fv.floorno
                 LEFT OUTER JOIN AZW150_vzconfig vz ON vz.userid=fv.custid AND vz.vzenddt IS NULL
-                LEFT OUTER JOIN AZW110_classmst AS cmd1 ON cmd1.classcd='" . CLASS_NODE_LOCATION . "' AND cmd1.code=vz.displaycd1
-                LEFT OUTER JOIN AZW110_classmst AS cmd2 ON cmd2.classcd='" . CLASS_NODE_LOCATION . "' AND cmd2.code=vz.displaycd2
+                LEFT OUTER JOIN AZW010_nodelocationmst AS cmd1 ON cmd1.code=vz.displaycd1
+                LEFT OUTER JOIN AZW010_nodelocationmst AS cmd2 ON cmd2.code=vz.displaycd2
                 LEFT OUTER JOIN AZW110_classmst AS cmt1 ON cmt1.classcd='" . CLASS_DEVICE_TYPE . "' AND cmt1.code=vz.devicetype1
                 LEFT OUTER JOIN AZW110_classmst AS cmt2 ON cmt2.classcd='" . CLASS_DEVICE_TYPE . "' AND cmt2.code=vz.devicetype2
                 WHERE fv.hostcd='$hostCd' GROUP BY fv.facilitycd,fv.floorno,zwm.roomcd,fv.custid,fv.custname,fv.birthday,fv.sex,vz.actionid,
@@ -55,8 +55,8 @@ if ($conn) {
             FROM AZW001_frscview fv INNER JOIN (SELECT DISTINCT roomcd,floorno,facilitycd FROM AZW134_roommst WHERE floorno='$floorNo'
             AND facilitycd='$facilityCd') zwm ON zwm.roomcd=fv.roomcd AND zwm.facilitycd=fv.facilitycd AND zwm.floorno=fv.floorno
             LEFT OUTER JOIN AZW150_vzconfig vz ON vz.userid=fv.custid AND vz.vzenddt IS NULL
-            LEFT OUTER JOIN AZW110_classmst AS cmd1 ON cmd1.classcd='" . CLASS_NODE_LOCATION . "' AND cmd1.code=vz.displaycd1
-            LEFT OUTER JOIN AZW110_classmst AS cmd2 ON cmd2.classcd='" . CLASS_NODE_LOCATION . "' AND cmd2.code=vz.displaycd2
+            LEFT OUTER JOIN AZW010_nodelocationmst AS cmd1 ON cmd1.code=vz.displaycd1
+            LEFT OUTER JOIN AZW010_nodelocationmst AS cmd2 ON cmd2.code=vz.displaycd2
             LEFT OUTER JOIN AZW110_classmst AS cmt1 ON cmt1.classcd='" . CLASS_DEVICE_TYPE . "' AND cmt1.code=vz.devicetype1
             LEFT OUTER JOIN AZW110_classmst AS cmt2 ON cmt2.classcd='" . CLASS_DEVICE_TYPE . "' AND cmt2.code=vz.devicetype2
             WHERE fv.facilitycd = '$facilityCd' AND fv.staffid = '$staffId'
@@ -157,7 +157,7 @@ if ($conn) {
 }
 
 if ($code == '200') {
-    $displayList = getCVList($conn, CLASS_NODE_LOCATION);
+    $displayList = getDisplayList($conn);
     $deviceTypeList = getCVList($conn, CLASS_DEVICE_TYPE, 'AND code<=5');
 }
 

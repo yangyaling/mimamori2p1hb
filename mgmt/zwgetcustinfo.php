@@ -25,7 +25,8 @@ function getMaxCustomerId($conn)
 {
     $maxCustomerId = '00001';
 
-    $sql = "SELECT RIGHT('00000' + CAST(MAX(cm.custid) + 1 AS VARCHAR), 5) maxcustid FROM AZW005_custmst cm";
+    $sql = "SELECT RIGHT('00000' + CAST(MAX(cm.custid) + 1 AS VARCHAR), 5) maxcustid
+            FROM (SELECT custid FROM AZW005_custmst UNION SELECT custid FROM AZW005_custmst_log) cm";
     $result = sqlsrv_query($conn, $sql);
 
     if ($result && $row = sqlsrv_fetch_array($result)) {

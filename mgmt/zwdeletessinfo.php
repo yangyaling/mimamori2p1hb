@@ -48,7 +48,7 @@ if ($conn) {
     }
 
     $sql = "SELECT cmd.value displayname,cmp.value placename FROM AZW009_serialrelation
-            LEFT OUTER JOIN AZW110_classmst AS cmd ON cmd.classcd='" . CLASS_NODE_LOCATION . "' AND cmd.code=displayname
+            LEFT OUTER JOIN AZW010_nodelocationmst AS cmd ON cmd.code=displayname
             LEFT OUTER JOIN AZW110_classmst AS cmp ON cmp.classcd='" . CLASS_NODE_PLACE . "' AND cmp.code=place
             WHERE serial='$oldSerial' $whereSql AND sensorid='$oldSensorId' AND startdate='$startDate'";
 
@@ -70,9 +70,9 @@ if ($conn) {
     // 設置情報変更履歴を作成する
     if ($code == '200' && !is_empty($oldCustomerId)) {
         $msgContent = $oldSensorId . ' ' . $displayName . ' ' . $placeName;
-        $insertSql = "INSERT INTO AZW152_vznoticetbl(receiveuser,senduser,noticetype,title,registdate,content)
+        $insertSql = "INSERT INTO AZW152_vznoticetbl(receiveuser,senduser,noticetype,title,registdate,content,createuser,createdate)
                           SELECT TOP 1 '$staffId','$oldCustomerId','S','センサーの設置情報が更新されました',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120),
-                          '【'+fv.roomcd+'】　'+fv.custname+'さんのセンサーの設置情報が更新されました。\n\n以下のセンサー情報が削除されました。\n$msgContent\n'
+                          '【'+fv.roomcd+'】　'+fv.custname+'さんのセンサーの設置情報が更新されました。\n\n以下のセンサー情報が削除されました。\n$msgContent\n','$staffId',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120)
                           FROM AZW001_frscview fv WHERE fv.custid='$oldCustomerId'";
 
         if (!sqlsrv_query($conn, $insertSql)) {

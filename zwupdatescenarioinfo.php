@@ -63,8 +63,8 @@ function checkScenario($conn, $scenarioId, $scenarioName, $staffId, $customerId,
                            '$scenarioId' scenarioid,'$deviceId' deviceid) u
                            ON s.scenarioid = u.scenarioid AND s.deviceid=u.deviceid WHEN MATCHED THEN
                            UPDATE SET updatedate = " . $SCH . ".GETJPDATE() WHEN NOT MATCHED THEN
-                           INSERT (staffid,custid,scenarioid,deviceid,result,updatedate)
-                           VALUES ('$staffId','$customerId','$scenarioId','$deviceId','異常検知あり'," . $SCH . ".GETJPDATE());";
+                           INSERT (staffid,custid,scenarioid,deviceid,result,updatedate,createuser,createdate)
+                           VALUES ('$staffId','$customerId','$scenarioId','$deviceId','異常検知あり'," . $SCH . ".GETJPDATE(),'$staffId',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120));";
             $resultSensorResult = sqlsrv_query($conn, $sqlSensorResult);
 
             if (!$resultSensorResult) {
@@ -79,8 +79,8 @@ function checkScenario($conn, $scenarioId, $scenarioName, $staffId, $customerId,
                         WHEN MATCHED THEN
                         UPDATE SET title = '$scenarioName',registdate = " . $SCH . ".GETJPDATE()
                         WHEN NOT MATCHED THEN
-                        INSERT (title,senduser,receiveuser,noticetype,status,subtitle,registdate)
-                        VALUES ('$scenarioName','$customerId','$staffId','1','0','$scenarioId'," . $SCH . ".GETJPDATE());";
+                        INSERT (title,senduser,receiveuser,noticetype,status,subtitle,registdate,createuser,createdate)
+                        VALUES ('$scenarioName','$customerId','$staffId','1','0','$scenarioId'," . $SCH . ".GETJPDATE(),'$staffId',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120));";
             $resultNotice = sqlsrv_query($conn, $sqlNotice);
 
             if (!$resultNotice) {
@@ -136,8 +136,8 @@ if ($conn && !is_empty($staffId) && !is_empty($customerId)) {
                     $value = $data['value'];
                     $rPoint = $data['rpoint'];
 
-                    $sql = "INSERT INTO AZW142_scenariodtl (scenarioid,detailno,deviceid,pattern,[time],[value],rpoint,updatedate)
-                        VALUES ('$scenarioId',$dno,'$deviceId','$pattern','$time','$value','$rPoint','$updateDate');";
+                    $sql = "INSERT INTO AZW142_scenariodtl (scenarioid,detailno,deviceid,pattern,[time],[value],rpoint,updatedate,createuser,createdate)
+                        VALUES ('$scenarioId',$dno,'$deviceId','$pattern','$time','$value','$rPoint','$updateDate','$staffId',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120));";
                     $result = sqlsrv_query($conn, $sql);
 
                     if (!$result) {
@@ -159,8 +159,8 @@ if ($conn && !is_empty($staffId) && !is_empty($customerId)) {
         $sql = "MERGE INTO AZW141_scenarioinfo s USING (SELECT '$scenarioId' scenarioid) u
               ON s.scenarioid = u.scenarioid WHEN MATCHED THEN
               UPDATE SET scenarioname='$scenarioName',updatedate='$updateDate',scopecd='$scopeCd',starttime='$startTime',endtime='$endTime'
-              WHEN NOT MATCHED THEN INSERT (staffid,custid,scenarioid,scenarioname,updatedate,scopecd,starttime,endtime)
-              VALUES ('$staffId','$customerId','$scenarioId','$scenarioName','$updateDate','$scopeCd','$startTime','$endTime');";
+              WHEN NOT MATCHED THEN INSERT (staffid,custid,scenarioid,scenarioname,updatedate,scopecd,starttime,endtime,createuser,createdate)
+              VALUES ('$staffId','$customerId','$scenarioId','$scenarioName','$updateDate','$scopeCd','$startTime','$endTime','$staffId',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120));";
 
         $result = sqlsrv_query($conn, $sql);
 

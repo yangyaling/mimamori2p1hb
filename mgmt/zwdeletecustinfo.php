@@ -89,8 +89,8 @@ if ($conn) {
     // 入居者情報が削除された場合、変更履歴を作成する
     if ($code == '200') {
         $msg = "【" . $roomCd . "】 " . $customerName . "さんの情報が削除されました。";
-        $insertSql = "INSERT INTO AZW152_vznoticetbl(receiveuser,senduser,noticetype,title,registdate,content) VALUES
-                      ('$staffId','$customerId','S','センサーの設置情報が更新されました',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120),'$msg')";
+        $insertSql = "INSERT INTO AZW152_vznoticetbl(receiveuser,senduser,noticetype,title,registdate,content,createuser,createdate) VALUES
+                      ('$staffId','$customerId','S','センサーの設置情報が更新されました',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120),'$msg','$staffId',CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120))";
 
         if (!sqlsrv_query($conn, $insertSql)) {
             $code = '507';

@@ -21,7 +21,7 @@ $facilityCd = $_POST['facilitycd'];
 if ($conn) {
 //    $facilityCd = '0001';
 
-    $sql = "SELECT roomcd,floorno FROM AZW134_roommst WHERE facilitycd='$facilityCd'";
+    $sql = "SELECT roomcd,floorno FROM AZW134_roommst WHERE facilitycd='$facilityCd' ORDER BY facilitycd,floorno,roomcd";
     $result = sqlsrv_query($conn, $sql);
 
     if ($result) {

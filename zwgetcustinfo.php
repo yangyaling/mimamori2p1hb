@@ -21,7 +21,8 @@ if ($conn) {
 //    $customerId = '00002';
 
     $sql = "SELECT DISTINCT ui.custid,ui.custname,ui.sex,ui.birthday,ui.address,ui.kakaritsuke,ui.drug,ui.health,ui.other,
-            ui.updateuser,ui.updatedate,cr.picpath,CONVERT(VARCHAR(19),cr.picupdatedate,120) picupdatedate,cr.roomcd,rm.floorno
+            ISNULL(ui.modifyuser,ui.createuser) updateuser,ISNULL(ui.modifydate,ui.createdate) updatedate,
+            cr.picpath,CONVERT(VARCHAR(19),cr.picupdatedate,120) picupdatedate,cr.roomcd,rm.floorno
             FROM AZW005_custmst ui INNER JOIN AZW001_frscview cr ON ui.custid = cr.custid
             INNER JOIN AZW134_roommst rm ON cr.roomcd = rm.roomcd AND cr.floorno = rm.floorno WHERE ui.custid='$customerId'";
 
