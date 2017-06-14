@@ -89,7 +89,7 @@ function getCVList($conn, $class, $whereString = '')
 function getDisplayList($conn)
 {
     global $SCH;
-    $sql = "SELECT [code],[value] FROM " . $SCH . "..[AZW010_nodelocationmst] ORDER BY [code]";
+    $sql = "SELECT [code],[value] FROM " . $SCH . ".[AZW010_nodelocationmst] ORDER BY [code]";
 
     $displayList = array();
     if ($result = sqlsrv_query($conn, $sql)) {
