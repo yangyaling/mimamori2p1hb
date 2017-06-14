@@ -141,7 +141,7 @@ function getAlertInfo($conn, $sendUser, $subTitle, &$code, &$errors)
                 $index = 0;
                 $index2 = $index2 + 1;
             }
-            $di[$index] = array(
+            $di[$index] = array(array(
                 'registdate' => $row[0],
                 'scenarioname' => $row[1],
                 'devicename' => $row[2],
@@ -150,7 +150,7 @@ function getAlertInfo($conn, $sendUser, $subTitle, &$code, &$errors)
                 'time' => $row[5],
                 'rpoint' => $row[6],
                 'roomname' => $row[7]
-            );
+            ));
             $index = $index + 1;
             $snId = $row[8] . $row[9];
         }
