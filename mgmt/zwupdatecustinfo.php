@@ -68,6 +68,31 @@ if ($conn && !is_empty($customerList)) {
                 break;
             }
         }
+
+        if ($code == '200') {
+            $sql = <<<AAA
+                MERGE INTO AZW009_serialrelation s
+                USING (
+                    SELECT
+                        serial,sensorid,facilitycd,'' custid,
+                        CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE(),120) startdate,
+                        'Sys' createuser,CONVERT(VARCHAR(19)," . $SCH . ".GETJPDATE(),120) createdate
+                    FROM AZW009_serialrelation
+                    WHERE custid='$customerId' AND enddate IS NULL
+                ) u ON u.custid=s.custid AND u.serial=s.serial AND u.sensorid=s.sensorid AND u.startdate=s.startdate
+                WHEN NOT MATCHED THEN
+                INSERT (serial,sensorid,facilitycd,custid,startdate,createuser,createdate)
+                VALUES (u.serial,u.sensorid,u.facilitycd,u.custid,u.startdate,u.createuser,u.createdate);
+                
+                UPDATE AZW009_serialrelation SET enddate=CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE()-1,120)
+                WHERE  custid='$customerId' AND enddate IS NULL;
+AAA;
+
+            if (!$result = sqlsrv_query($conn, $sql)) {
+                $code = '504';
+                $errors = sqlsrv_errors();
+            }
+        }
     }
 } else {
     $code = '500';
