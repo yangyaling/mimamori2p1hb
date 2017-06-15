@@ -94,8 +94,6 @@ function checkScenario($conn, $scenarioId, $scenarioName, $staffId, $customerId,
     return $retVal;
 }
 
-$arrReturn['aaa'] = !is_empty($staffId) && !is_empty($customerId);
-
 //if ($conn && sqlsrv_begin_transaction($conn) && !is_empty($staffId) && !is_empty($customerId)) {
 if ($conn && !is_empty($staffId) && !is_empty($customerId)) {
     //シナリオ採番
