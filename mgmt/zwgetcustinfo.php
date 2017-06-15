@@ -80,7 +80,7 @@ if ($conn) {
     $sql = "SELECT DISTINCT cr.custid,cm.custname,cr.roomcd,fv.floorno FROM AZW008_custrelation cr
             INNER JOIN AZW005_custmst cm ON cr.custid=cm.custid
             INNER JOIN AZW001_frscview fv ON cr.custid=fv.custid AND cr.roomcd=fv.roomcd AND cr.floorno=fv.floorno
-            WHERE fv.facilitycd='$facilityCd'";
+            WHERE fv.facilitycd='$facilityCd' ORDER BY cr.custid";
 
     $result = sqlsrv_query($conn, $sql);
 

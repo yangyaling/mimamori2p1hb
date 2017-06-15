@@ -74,7 +74,7 @@ if ($conn) {
     $sql = "SELECT sr.staffid,sm.staffname,sm.usertype,clm.value usertypename FROM AZW003_facilitymst fm
             INNER JOIN AZW007_staffrelation sr ON fm.facilitycd=sr.facilitycd INNER JOIN AZW004_staffmst sm ON sr.staffid=sm.staffid
             LEFT OUTER JOIN AZW110_classmst clm ON clm.classcd='" . CLASS_USER_TYPE . "' AND sm.usertype=clm.code
-            WHERE fm.facilitycd='$facilityCd'";
+            WHERE fm.facilitycd='$facilityCd' ORDER BY sr.staffid";
 
     $sql3 = $sql . $sql2;
 
