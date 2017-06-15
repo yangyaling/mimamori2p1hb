@@ -20,7 +20,7 @@ $roomCd = $_POST['roomcd'];
 $floorNo = $_POST['floorno'];
 
 //$staffId = 'sw00001';
-//$customerId = '00017';
+//$customerId = '00009';
 //$roomCd = '201号室';
 //$floorNo = 'B棟2';
 
@@ -86,6 +86,34 @@ if ($conn) {
             }
         }
     }
+
+    if ($code == '200') {
+        $sql = <<<AAA
+                MERGE INTO AZW009_serialrelation s
+                USING (
+                SELECT 
+                    serial,sensorid,facilitycd,'' custid,
+                    CONVERT(VARCHAR(10),$SCH.GETJPDATE(),120) startdate,
+                    'Sys' createuser,CONVERT(VARCHAR(19),$SCH.GETJPDATE(),120) createdate
+                FROM AZW009_serialrelation
+                WHERE custid='$customerId' AND enddate IS NULL
+                ) u ON u.serial=s.serial AND u.sensorid=s.sensorid AND u.startdate=s.startdate
+                WHEN MATCHED AND s.startdate=CONVERT(VARCHAR(10),$SCH.GETJPDATE(),120) THEN
+                UPDATE SET custid='',initflag='0',displayname=null,place=null,memo=null
+                WHEN NOT MATCHED THEN
+                INSERT (serial,sensorid,facilitycd,custid,startdate,createuser,createdate)
+                VALUES (u.serial,u.sensorid,u.facilitycd,u.custid,u.startdate,u.createuser,u.createdate);
+                UPDATE AZW009_serialrelation 
+                SET enddate=CONVERT(VARCHAR(10),$SCH.GETJPDATE()-1,120)
+                WHERE  custid='$customerId' AND enddate IS NULL;
+AAA;
+
+        if (!$result = sqlsrv_query($conn, $sql)) {
+            $code = '508';
+            $errors = sqlsrv_errors();
+        }
+    }
+
     // 入居者情報が削除された場合、変更履歴を作成する
     if ($code == '200') {
         $msg = "【" . $roomCd . "】 " . $customerName . "さんの情報が削除されました。";
