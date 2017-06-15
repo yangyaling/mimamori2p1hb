@@ -274,7 +274,7 @@ function updateVZConfig($conn, $staffId, $customerId, $data, $today, &$vzHistory
                         return false;
                     }
                 } else {
-                    $sql = "UPDATE AZW150_vzconfig SET vzenddt=CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE()-1,120)+' 00:00:00'
+                    $sql = "UPDATE AZW150_vzconfig SET vzenddt=CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE()-1,120)+' 23:59:59'
                             WHERE userid='$customerId' AND actionid='$actionId' AND actionclass='$actionClass' AND vzstartdt='$vzStartDt'";
 
                     if (!$result = sqlsrv_query($conn, $sql)) {
@@ -310,7 +310,7 @@ function deleteVZConfig($conn, $customerId, $data, &$vzHistory, &$code, &$errors
                 AND actionclass='$actionClass' AND vzstartdt='$vzStartDt'";
 
     if (sqlsrv_has_rows(sqlsrv_query($conn, $sql))) {
-        $sql = "UPDATE AZW150_vzconfig SET vzenddt = CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE()-1,120)+' 00:00:00'
+        $sql = "UPDATE AZW150_vzconfig SET vzenddt = CONVERT(VARCHAR(10)," . $SCH . ".GETJPDATE()-1,120)+' 23:59:59'
                 WHERE userid='$customerId' AND actionid='$actionId'
                 AND actionclass='$actionClass' AND vzstartdt='$vzStartDt'";
 
