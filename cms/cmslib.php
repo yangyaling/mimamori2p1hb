@@ -20,8 +20,8 @@ define("MYSQL_DB", "rdbeacoAd7N1JMXE");
 //define("UID", "iosapp");
 //define("PWD", "Passw0rd");
 
-define("SERVERNAME", "tcp:mimamori.database.windows.net,1433");
-define("DATABASE", "mimamoriDB2");
+define("SERVERNAME", "rdbeacon.database.chinacloudapi.cn");
+define("DATABASE", "rdbeacondb");
 //define("UID", "sch001");
 define("PWD", "Passw0rd");
 //define("SCH", "sch001");
