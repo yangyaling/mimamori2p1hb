@@ -13,8 +13,7 @@ define("MYSQL_USER", "b5b35eecdcd068");
 define("MYSQL_PASS", "b5074189");
 define("MYSQL_DB", "rdbeacoAd7N1JMXE");
 
-//define("SERVERNAME", "tcp:mimamori.database.windows.net,1433");
-//define("DATABASE", "mimamoriDB2");
+
 define("SERVERNAME", "rdbeacon.database.chinacloudapi.cn");
 define("DATABASE", "rdbeacondb");
 define("PWD", "Passw0rd");
