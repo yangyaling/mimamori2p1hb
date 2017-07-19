@@ -85,7 +85,7 @@ if ($isApi && !is_empty($isApi)) {
 
         header("Location: home.php");
     } else {
-        header("Location: login.php?errno=1&hostcd=$hostCd&userid=$userId");
+        header("Location: login.php?errno=1&hostcd=$hostCd&userid=$userId&code=".$arrReturn['code']);
     }
     exit();
 }
